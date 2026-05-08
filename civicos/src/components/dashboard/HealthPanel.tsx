@@ -3,15 +3,15 @@
 import { motion } from "framer-motion";
 import { HeartPulse, Database, Radio, Brain, Shield } from "lucide-react";
 import { GlassPanel } from "../ui/GlassPanel";
-import { useWorkflowStore } from "../../stores/workflowStore";
+import { useOrchestrationRegistry } from "../../stores/orchestrationRegistry";
 
 /**
  * CIVICOS — HEALTH PANEL
  * Upgraded to visualize real-time operational status of backend infrastructure.
  */
 export function HealthPanel() {
-  const health = useWorkflowStore(state => state.health);
-  const systemTelemetry = useWorkflowStore(state => state.systemTelemetry);
+  const health = useOrchestrationRegistry(state => state.health);
+  const systemTelemetry = useOrchestrationRegistry(state => state.systemTelemetry);
 
   const subsystems = [
     { label: "Backend API", status: health.backend, icon: Database },

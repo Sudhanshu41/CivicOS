@@ -2,68 +2,87 @@
 
 import { useEffect, useCallback } from 'react';
 import { useSocket } from '../providers/SocketProvider';
-import { useWorkflowStore } from '../stores/workflowStore';
-import { NodeUpdatePayload, LogAppendPayload } from '../types/orchestration';
+import { useOrchestrationRegistry } from '../stores/orchestrationRegistry';
+import { OrchestrationEvent, NodeUpdatePayload, LogAppendPayload } from '../types/orchestration';
 
 /**
  * CIVICOS — USE ORCHESTRATION HOOK
- * Bridges WebSocket events to the global Workflow Store.
+ * Bridges WebSocket events to the global Orchestration Registry.
  */
-export function useOrchestration(issueId?: string) {
+export function useOrchestration() {
   const { subscribe, status: socketStatus } = useSocket();
-  const store = useWorkflowStore();
+  const registry = useOrchestrationRegistry();
 
   // Sync socket status to health store
   useEffect(() => {
     const healthStatus = 
       socketStatus === "CONNECTED" ? "online" : 
       (socketStatus === "DEGRADED" ? "degraded" : "offline");
-    store.updateHealth({ websocket: healthStatus });
-  }, [socketStatus, store]);
+    registry.updateHealth({ websocket: healthStatus });
+  }, [socketStatus, registry]);
 
-  const handleNodeUpdate = useCallback((payload: NodeUpdatePayload) => {
-    store.updateNode(payload);
-  }, [store]);
+  const handleNodeUpdate = useCallback((event: OrchestrationEvent) => {
+    const { workflow_id, payload } = event;
+    registry.initializeWorkflow(workflow_id);
+    registry.updateWorkflowNode(workflow_id, payload as unknown as NodeUpdatePayload);
+  }, [registry]);
 
-  const handleLogAppend = useCallback((payload: LogAppendPayload) => {
-    store.addLog(payload);
-  }, [store]);
+  const handleLogAppend = useCallback((event: OrchestrationEvent) => {
+    const { workflow_id, payload } = event;
+    registry.initializeWorkflow(workflow_id);
+    registry.addWorkflowLog(workflow_id, payload as unknown as LogAppendPayload);
+  }, [registry]);
 
-  const handleWorkflowStarted = useCallback((payload: Record<string, unknown>) => {
-    store.setStatus('running');
-    store.addLog({ message: "AI Orchestration pipeline engaged.", level: "info" });
-  }, [store]);
+  const handleWorkflowStarted = useCallback((event: OrchestrationEvent) => {
+    const { workflow_id } = event;
+    registry.initializeWorkflow(workflow_id);
+    registry.setWorkflowStatus(workflow_id, 'running');
+    registry.addWorkflowLog(workflow_id, { message: "AI Orchestration pipeline engaged.", level: "info" });
+  }, [registry]);
 
-  const handleWorkflowCompleted = useCallback((payload: Record<string, unknown>) => {
-    store.setStatus('completed');
-    store.addLog({ message: "Orchestration successfully completed.", level: "info" });
-  }, [store]);
+  const handleWorkflowCompleted = useCallback((event: OrchestrationEvent) => {
+    const { workflow_id } = event;
+    registry.initializeWorkflow(workflow_id);
+    registry.setWorkflowStatus(workflow_id, 'completed');
+    registry.addWorkflowLog(workflow_id, { message: "Orchestration successfully completed.", level: "info" });
+  }, [registry]);
 
-  const handleWorkflowFailed = useCallback((payload: { error?: string }) => {
-    store.setStatus('failed');
-    store.addLog({ message: `Orchestration failed: ${payload.error || 'Unknown error'}`, level: "error" });
-  }, [store]);
+  const handleWorkflowFailed = useCallback((event: OrchestrationEvent) => {
+    const { workflow_id, payload } = event;
+    const errorPayload = payload as Record<string, unknown>;
+    registry.initializeWorkflow(workflow_id);
+    registry.setWorkflowStatus(workflow_id, 'failed');
+    registry.addWorkflowLog(workflow_id, { message: `Orchestration failed: ${errorPayload.error || 'Unknown error'}`, level: "error" });
+  }, [registry]);
 
-  const handleRetry = useCallback((payload: { attempt: number }) => {
-    store.updateTelemetry({ retries: (store.telemetry.retries || 0) + 1 });
-    store.addLog({ message: `AI agent encountered a timeout. Initiating retry attempt ${payload.attempt}...`, level: "ai" });
-  }, [store]);
+  const handleRetry = useCallback((event: OrchestrationEvent) => {
+    const { workflow_id, payload } = event;
+    const retryPayload = payload as { attempt: number };
+    registry.initializeWorkflow(workflow_id);
+    const wf = useOrchestrationRegistry.getState().workflows[workflow_id];
+    if (wf) {
+      registry.updateWorkflowTelemetry(workflow_id, { retries: (wf.telemetry.retries || 0) + 1 });
+    }
+    registry.updateSystemTelemetry({ totalRetries: useOrchestrationRegistry.getState().systemTelemetry.totalRetries + 1 });
+    registry.addWorkflowLog(workflow_id, { message: `AI agent encountered a timeout. Initiating retry attempt ${retryPayload.attempt}...`, level: "ai" });
+  }, [registry]);
 
-  const handleReasoning = useCallback((payload: { text: string }) => {
-    store.appendReasoning(payload.text);
-  }, [store]);
+  const handleReasoning = useCallback((event: OrchestrationEvent) => {
+    const { workflow_id, payload } = event;
+    const reasoningPayload = payload as { text: string };
+    registry.initializeWorkflow(workflow_id);
+    registry.appendWorkflowReasoning(workflow_id, reasoningPayload.text);
+  }, [registry]);
 
   useEffect(() => {
-    if (!issueId) return;
-
     // Subscriptions
-    const unsubNode = subscribe('node_update', handleNodeUpdate);
-    const unsubLog = subscribe('log_append', handleLogAppend);
-    const unsubStart = subscribe('workflow.started', handleWorkflowStarted);
-    const unsubEnd = subscribe('workflow.completed', handleWorkflowCompleted);
-    const unsubFail = subscribe('workflow.failed', handleWorkflowFailed);
-    const unsubRetry = subscribe('ai_retry_attempted', handleRetry);
-    const unsubReason = subscribe('ai_reasoning_chunk', handleReasoning);
+    const unsubNode = subscribe<OrchestrationEvent>('node_update', handleNodeUpdate);
+    const unsubLog = subscribe<OrchestrationEvent>('log_append', handleLogAppend);
+    const unsubStart = subscribe<OrchestrationEvent>('workflow.started', handleWorkflowStarted);
+    const unsubEnd = subscribe<OrchestrationEvent>('workflow.completed', handleWorkflowCompleted);
+    const unsubFail = subscribe<OrchestrationEvent>('workflow.failed', handleWorkflowFailed);
+    const unsubRetry = subscribe<OrchestrationEvent>('ai_retry_attempted', handleRetry);
+    const unsubReason = subscribe<OrchestrationEvent>('ai_reasoning_chunk', handleReasoning);
 
     return () => {
       unsubNode();
@@ -74,10 +93,10 @@ export function useOrchestration(issueId?: string) {
       unsubRetry();
       unsubReason();
     };
-  }, [issueId, subscribe, handleNodeUpdate, handleLogAppend, handleWorkflowStarted, handleWorkflowCompleted, handleWorkflowFailed, handleRetry, handleReasoning]);
+  }, [subscribe, handleNodeUpdate, handleLogAppend, handleWorkflowStarted, handleWorkflowCompleted, handleWorkflowFailed, handleRetry, handleReasoning]);
 
   return {
-    ...store,
+    registry,
     socketStatus,
   };
 }

@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { api } from '../lib/api';
-import { useWorkflowStore } from '../stores/workflowStore';
-import { WorkflowState } from '../types/orchestration';
+import { useOrchestrationRegistry } from '../stores/orchestrationRegistry';
+import { WorkflowState } from '../stores/orchestrationRegistry';
 
 /**
  * CIVICOS — USE WORKFLOW HISTORY HOOK
@@ -13,7 +13,7 @@ export function useWorkflowHistory() {
   const [history, setHistory] = useState<Record<string, unknown>[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const store = useWorkflowStore();
+  const registry = useOrchestrationRegistry();
 
   const fetchHistory = useCallback(async () => {
     setIsLoading(true);
@@ -35,8 +35,12 @@ export function useWorkflowHistory() {
   const loadReplay = useCallback(async (workflowId: string) => {
     setIsLoading(true);
     try {
-      const data = await api.get<Partial<WorkflowState>>(`/workflows/${workflowId}/trace`);
-      store.hydrateReplay(data);
+      const data = await api.get<WorkflowState>(`/workflows/${workflowId}/trace`);
+      registry.initializeWorkflow(workflowId);
+      // We manually override the workflow state with replay data
+      // For now, just set status and active workflow
+      registry.setWorkflowStatus(workflowId, 'replay');
+      registry.setActiveWorkflow(workflowId);
       setError(null);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -47,7 +51,7 @@ export function useWorkflowHistory() {
     } finally {
       setIsLoading(false);
     }
-  }, [store]);
+  }, [registry]);
 
   useEffect(() => {
     // eslint-disable-next-line

@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
-import { useWorkflowStore } from "../../stores/workflowStore";
+import { useOrchestrationRegistry } from "../../stores/orchestrationRegistry";
 
 interface ActivityEntry {
   id: string | number;
@@ -57,7 +57,9 @@ export function ActivityFeed({ maxVisible = 8, compact = false, className = "", 
   className?: string;
   live?: boolean;
 }) {
-  const storeLogs = useWorkflowStore(state => state.logs);
+  const activeId = useOrchestrationRegistry(state => state.activeWorkflowId);
+  const activeWf = useOrchestrationRegistry(state => activeId ? state.workflows[activeId] : null);
+  const storeLogs = activeWf?.logs || [];
   const [mounted, setMounted] = useState(false);
   const [localLogs, setLocalLogs] = useState<ActivityEntry[]>(
     SEED_LOGS.map((l, i) => ({ ...l, id: i }))

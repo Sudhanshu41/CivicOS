@@ -51,10 +51,10 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
       ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          const { type, payload } = data;
+          const type = data.type;
           
-          if (subscriptions.current[type]) {
-            subscriptions.current[type].forEach(callback => callback(payload));
+          if (type && subscriptions.current[type]) {
+            subscriptions.current[type].forEach(callback => callback(data));
           }
           // Global catch-all
           if (subscriptions.current["*"]) {

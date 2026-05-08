@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { BrainCircuit, Cpu, ShieldCheck, Search, Eye, Radio, Zap } from "lucide-react";
-import { useWorkflowStore } from "../../../stores/workflowStore";
+import { useOrchestrationRegistry } from "../../../stores/orchestrationRegistry";
 import { MetricCounter } from "../../motion/MetricCounter";
 
 const agentIcons: Record<string, any> = {
@@ -19,9 +19,12 @@ const agentIcons: Record<string, any> = {
  * Upgraded with segmented blocks and active agent tracking.
  */
 export function ReasoningEngine() {
-  const reasoning = useWorkflowStore(state => state.reasoning);
-  const telemetry = useWorkflowStore(state => state.telemetry);
-  const nodes = useWorkflowStore(state => state.nodes);
+  const activeId = useOrchestrationRegistry(state => state.activeWorkflowId);
+  const activeWf = useOrchestrationRegistry(state => activeId ? state.workflows[activeId] : null);
+  
+  const reasoning = activeWf?.reasoning || "";
+  const telemetry = activeWf?.telemetry || { retries: 0 };
+  const nodes = activeWf?.nodes || {};
 
   // Identify active agent from nodes
   const activeAgentNode = Object.values(nodes).find(n => n.status === "ACTIVE");

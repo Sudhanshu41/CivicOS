@@ -3,7 +3,7 @@
 import { Search, Bell, User, Activity } from "lucide-react";
 import { PulseIndicator } from "../motion/PulseIndicator";
 import { useSocket } from "../../providers/SocketProvider";
-import { useWorkflowStore } from "../../stores/workflowStore";
+import { useOrchestrationRegistry } from "../../stores/orchestrationRegistry";
 
 /**
  * CIVICOS — DASHBOARD HEADER
@@ -14,7 +14,7 @@ import { useWorkflowStore } from "../../stores/workflowStore";
 export function DashboardHeader() {
   const socket = useSocket();
   const status = socket?.status || "DISCONNECTED";
-  const health = useWorkflowStore(state => state.health);
+  const health = useOrchestrationRegistry(state => state.health);
 
   const getStatusColor = () => {
     switch (status) {

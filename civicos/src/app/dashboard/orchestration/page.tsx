@@ -27,6 +27,7 @@ import { PulseIndicator } from "../../../components/motion/PulseIndicator";
 import { MetricCounter } from "../../../components/motion/MetricCounter";
 import { GlassPanel } from "../../../components/ui/GlassPanel";
 import { useOrchestration } from "../../../hooks/useOrchestration";
+import { useOrchestrationRegistry } from "../../../stores/orchestrationRegistry";
 import { ReasoningEngine } from "../../../components/dashboard/orchestration/ReasoningEngine";
 import { TraceInspector } from "../../../components/dashboard/orchestration/TraceInspector";
 import { AgentNode } from "../../../components/dashboard/orchestration/AgentNode";
@@ -61,7 +62,14 @@ const initialEdges: Edge[] = [
 ];
 
 export default function OrchestrationPage() {
-  const { nodes: liveNodes, status, telemetry } = useOrchestration("active-workflow");
+  useOrchestration(); // global event listener — no args needed anymore
+  const registry = useOrchestrationRegistry();
+  const activeId = registry.activeWorkflowId;
+  const activeWf = activeId ? registry.workflows[activeId] : null;
+  const liveNodes = activeWf?.nodes || {};
+  const status = activeWf?.status || "idle";
+  const telemetry = activeWf?.telemetry || { totalLatency: 0, tokensUsed: 0, retries: 0 };
+
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);

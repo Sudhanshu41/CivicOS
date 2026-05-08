@@ -3,15 +3,16 @@
 import { Activity, Clock, Zap, Target, Gauge } from "lucide-react";
 import { MetricCounter } from "../motion/MetricCounter";
 import { GlassPanel } from "../ui/GlassPanel";
-import { useWorkflowStore } from "../../stores/workflowStore";
+import { useOrchestrationRegistry } from "../../stores/orchestrationRegistry";
 
 /**
  * CIVICOS — TELEMETRY GRID
  * Displays real-time global orchestration metrics.
  */
 export function TelemetryGrid() {
-  const systemTelemetry = useWorkflowStore(state => state.systemTelemetry);
-  const telemetry = useWorkflowStore(state => state.telemetry);
+  const systemTelemetry = useOrchestrationRegistry(state => state.systemTelemetry);
+  const activeId = useOrchestrationRegistry(state => state.activeWorkflowId);
+  const telemetry = useOrchestrationRegistry(state => activeId ? state.workflows[activeId]?.telemetry : { retries: 0 });
 
   const metrics = [
     { 
