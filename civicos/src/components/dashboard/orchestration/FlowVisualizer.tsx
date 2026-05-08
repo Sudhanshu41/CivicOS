@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Network } from "lucide-react";
-import { ReactFlow, Background, useNodesState, useEdgesState, Node, Edge } from "@xyflow/react";
+import { ReactFlow, Background, Node, Edge } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { PulseIndicator } from "../../motion/PulseIndicator";
 import { MagneticButton } from "../../motion/MagneticButton";
@@ -12,6 +12,7 @@ import { AgentNode } from "./AgentNode";
 /**
  * CIVICOS — FLOW VISUALIZER
  * Visual orchestration of autonomous AI agents using ReactFlow.
+ * Connected to real-time orchestration store.
  */
 
 const nodeTypes = {
@@ -23,11 +24,20 @@ interface FlowVisualizerProps {
   edges: Edge[];
   onNodesChange: any;
   onEdgesChange: any;
+  onNodeClick?: (event: any, node: Node) => void;
+  status?: string;
 }
 
-export function FlowVisualizer({ nodes, edges, onNodesChange, onEdgesChange }: FlowVisualizerProps) {
+export function FlowVisualizer({ 
+  nodes, 
+  edges, 
+  onNodesChange, 
+  onEdgesChange, 
+  onNodeClick,
+  status = "idle"
+}: FlowVisualizerProps) {
   return (
-    <GlassPanel className="flex-1 relative overflow-hidden flex flex-col" hover={false}>
+    <div className="flex-1 relative overflow-hidden flex flex-col">
       <div className="p-6 pb-4 border-b border-white/5 flex justify-between items-center z-10">
         <div className="flex items-center space-x-2">
           <h2 className="font-medium text-sm tracking-widest text-white uppercase">AI Orchestration</h2>
@@ -37,7 +47,12 @@ export function FlowVisualizer({ nodes, edges, onNodesChange, onEdgesChange }: F
           <MagneticButton className="px-3 py-1 rounded-sm text-[10px] font-mono tracking-wider border border-white/10 hover:bg-white/5 transition uppercase">
             Optimize Mesh
           </MagneticButton>
-          <PulseIndicator status="active" size="xs" showLabel color="yellow" />
+          <PulseIndicator 
+            status={status === 'running' ? 'active' : 'offline'} 
+            size="xs" 
+            showLabel 
+            color="yellow" 
+          />
         </div>
       </div>
 
@@ -47,6 +62,7 @@ export function FlowVisualizer({ nodes, edges, onNodesChange, onEdgesChange }: F
           edges={edges} 
           onNodesChange={onNodesChange} 
           onEdgesChange={onEdgesChange} 
+          onNodeClick={onNodeClick}
           nodeTypes={nodeTypes}
           fitView
           className="bg-transparent"
@@ -55,6 +71,6 @@ export function FlowVisualizer({ nodes, edges, onNodesChange, onEdgesChange }: F
           <Background color="#111" gap={20} size={1} />
         </ReactFlow>
       </div>
-    </GlassPanel>
+    </div>
   );
 }

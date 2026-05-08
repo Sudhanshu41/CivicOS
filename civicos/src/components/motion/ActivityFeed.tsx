@@ -2,12 +2,13 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useWorkflowStore } from "../../stores/workflowStore";
 
 interface ActivityEntry {
-  id: number;
+  id: string | number;
   time: string;
   msg: string;
-  type: "system" | "alert" | "warn" | "success" | "action" | "intel";
+  type: "system" | "alert" | "warn" | "success" | "action" | "intel" | "ai";
   agent?: string;
 }
 
@@ -18,6 +19,7 @@ const typeStyles = {
   success: { dot: "bg-emerald-400", text: "text-emerald-300",tag: "text-emerald-400",label: "OK " },
   action:  { dot: "bg-cyan-400",    text: "text-cyan-200",   tag: "text-cyan-400",   label: "ACT" },
   intel:   { dot: "bg-purple-400",  text: "text-purple-200", tag: "text-purple-400", label: "INT" },
+  ai:      { dot: "bg-yellow-400",  text: "text-yellow-200", tag: "text-yellow-400", label: "AI " },
 };
 
 function getSafeTime() {
@@ -49,13 +51,15 @@ const AUTO_MESSAGES: Omit<ActivityEntry, "id" | "time">[] = [
   { msg: "Security AI flagged unusual activity near Port Gate-3. Monitoring.", type: "alert", agent: "Security" },
 ];
 
-export function ActivityFeed({ maxVisible = 8, compact = false, className = "" }: {
+export function ActivityFeed({ maxVisible = 8, compact = false, className = "", live = false }: {
   maxVisible?: number;
   compact?: boolean;
   className?: string;
+  live?: boolean;
 }) {
+  const storeLogs = useWorkflowStore(state => state.logs);
   const [mounted, setMounted] = useState(false);
-  const [logs, setLogs] = useState<ActivityEntry[]>(
+  const [localLogs, setLocalLogs] = useState<ActivityEntry[]>(
     SEED_LOGS.map((l, i) => ({ ...l, id: i }))
   );
   const [msgIdx, setMsgIdx] = useState(0);
@@ -65,28 +69,36 @@ export function ActivityFeed({ maxVisible = 8, compact = false, className = "" }
     setMounted(true);
     // On mount, update the initial logs with real timestamps
     const currentTime = new Date().toLocaleTimeString("en-US", { hour12: false });
-    setLogs(prev => prev.map(l => ({ ...l, time: currentTime })));
+    setLocalLogs(prev => prev.map(l => ({ ...l, time: currentTime })));
   }, []);
 
   useEffect(() => {
-    if (!mounted) return;
+    if (!mounted || live) return;
     const interval = setInterval(() => {
       const next = AUTO_MESSAGES[msgIdx % AUTO_MESSAGES.length];
       const time = new Date().toLocaleTimeString("en-US", { hour12: false });
-      setLogs(prev => [{ ...next, time, id: counter }, ...prev].slice(0, maxVisible + 4));
+      setLocalLogs(prev => [{ ...next, time, id: counter }, ...prev].slice(0, maxVisible + 4));
       setMsgIdx(i => i + 1);
       setCounter(c => c + 1);
     }, 2800);
     return () => clearInterval(interval);
-  }, [msgIdx, counter, maxVisible, mounted]);
+  }, [msgIdx, counter, maxVisible, mounted, live]);
 
-  const visible = logs.slice(0, maxVisible);
+  const displayLogs = live ? storeLogs.map((l, i) => ({
+    id: `live-${i}`,
+    time: new Date().toLocaleTimeString("en-US", { hour12: false }),
+    msg: l.message,
+    type: l.level === 'ai' ? 'ai' : (l.level === 'error' ? 'alert' : (l.level === 'warning' ? 'warn' : 'system')),
+    agent: l.agent
+  })).reverse() : localLogs;
+
+  const visible = displayLogs.slice(0, maxVisible);
 
   return (
     <div className={`space-y-1.5 overflow-hidden ${className}`}>
       <AnimatePresence initial={false} mode="popLayout">
         {visible.map((log) => {
-          const s = typeStyles[log.type];
+          const s = typeStyles[log.type as keyof typeof typeStyles] || typeStyles.system;
           return (
             <motion.div
               key={log.id}
@@ -99,7 +111,7 @@ export function ActivityFeed({ maxVisible = 8, compact = false, className = "" }
             >
               <motion.div
                 animate={{ scale: [1, 1.4, 1], opacity: [0.8, 1, 0.8] }}
-                transition={{ duration: 2.5, repeat: Infinity, delay: (log.id % 10) * 0.2 }}
+                transition={{ duration: 2.5, repeat: Infinity, delay: (Number(log.id) % 10) * 0.2 || 0 }}
                 className={`w-1.5 h-1.5 rounded-full shrink-0 mt-1 ${s.dot}`}
               />
               <div className="flex-1 min-w-0">

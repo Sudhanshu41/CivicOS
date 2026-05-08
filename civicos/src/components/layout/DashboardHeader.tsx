@@ -1,14 +1,41 @@
 "use client";
 
-import { Search, Bell, User } from "lucide-react";
+import { Search, Bell, User, Activity } from "lucide-react";
 import { PulseIndicator } from "../motion/PulseIndicator";
+import { useSocket } from "../../providers/SocketProvider";
+import { useWorkflowStore } from "../../stores/workflowStore";
 
 /**
  * CIVICOS — DASHBOARD HEADER
  * High-end cinematic top navigation bar.
+ * Updated to reflect real-time system health and connectivity.
  */
 
 export function DashboardHeader() {
+  const socket = useSocket();
+  const status = socket?.status || "DISCONNECTED";
+  const health = useWorkflowStore(state => state.health);
+
+  const getStatusColor = () => {
+    switch (status) {
+      case "CONNECTED": return "yellow";
+      case "CONNECTING":
+      case "RECONNECTING": return "yellow";
+      case "DEGRADED": return "red";
+      default: return "gray";
+    }
+  };
+
+  const getStatusLabel = () => {
+    switch (status) {
+      case "CONNECTED": return "Network Optimized";
+      case "CONNECTING": return "Initializing Sync";
+      case "RECONNECTING": return "Restoring Link";
+      case "DEGRADED": return "Latency Warning";
+      default: return "Link Offline";
+    }
+  };
+
   return (
     <header className="h-16 shrink-0 z-20 flex items-center justify-between px-8 bg-black/80 backdrop-blur-2xl border-b border-white/5">
       
@@ -26,9 +53,25 @@ export function DashboardHeader() {
 
       {/* Right Actions */}
       <div className="flex items-center space-x-6">
+        
+        {/* AI Health */}
+        <div className="hidden xl:flex items-center space-x-2 text-[9px] font-mono text-gray-500 mr-4">
+          <Activity className="w-3 h-3" />
+          <span className="uppercase tracking-tighter">AI Provider:</span>
+          <span className={health.aiProvider === 'online' ? "text-emerald-500" : "text-rose-500"}>
+            {health.aiProvider.toUpperCase()}
+          </span>
+        </div>
+
+        {/* WebSocket Status */}
         <div className="hidden lg:flex items-center space-x-2 text-[10px] font-mono text-gray-400 px-3 py-1 rounded-full border border-white/5 bg-white/[0.01]">
-          <PulseIndicator status="online" size="xs" color="yellow" showLabel={false} />
-          <span className="tracking-[0.2em] uppercase">Network Optimized</span>
+          <PulseIndicator 
+            status={status === "CONNECTED" ? "active" : "offline"} 
+            size="xs" 
+            color={getStatusColor() as any} 
+            showLabel={false} 
+          />
+          <span className="tracking-[0.2em] uppercase">{getStatusLabel()}</span>
         </div>
         
         <button className="relative text-gray-500 hover:text-white transition-colors">

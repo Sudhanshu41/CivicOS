@@ -20,7 +20,7 @@ export function ConsciousnessFeed() {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto p-6 pt-4 no-scrollbar">
-        <ActivityFeed maxVisible={10} compact />
+        <ActivityFeed maxVisible={10} compact live />
       </div>
     </GlassPanel>
   );

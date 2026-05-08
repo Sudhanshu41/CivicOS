@@ -3,6 +3,8 @@
  * Centralized types for a production-grade frontend architecture.
  */
 
+import { LucideIcon } from "lucide-react";
+
 // --- Status & Identity ---
 export type PulseStatus = "online" | "active" | "warning" | "critical" | "offline" | "syncing";
 export type RadarColor = "blue" | "green" | "red" | "white" | "yellow";
@@ -31,7 +33,7 @@ export interface MetricData {
   prefix?: string;
   suffix?: string;
   color?: ThemeColor;
-  icon?: any; // Lucide icon component
+  icon?: LucideIcon;
   trend?: "up" | "down" | "neutral";
 }
 
@@ -42,7 +44,7 @@ export interface AgentData {
   type: string;
   power: number;
   active: boolean;
-  icon: any;
+  icon: LucideIcon;
 }
 
 // --- Component Props ---

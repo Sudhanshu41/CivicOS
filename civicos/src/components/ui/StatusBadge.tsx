@@ -27,7 +27,7 @@ export function StatusBadge({
     <div className={`status-badge ${className}`}>
       <PulseIndicator 
         status={status} 
-        color={color as any} 
+        color={color} 
         size={size} 
         showLabel={false} 
       />

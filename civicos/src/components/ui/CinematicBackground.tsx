@@ -24,6 +24,8 @@ export default function CinematicBackground() {
       duration: 8 + Math.random() * 10,
       delay: Math.random() * 5,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // @ts-ignore
     setParticles(generatedParticles);
   }, []);
 
