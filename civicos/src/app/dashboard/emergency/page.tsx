@@ -89,16 +89,18 @@ export default function EmergencyPage() {
 
         {/* 2. Center Column: Tactical Command */}
         <div className="w-full xl:w-2/4 flex flex-col space-y-8 h-full min-h-[450px]">
-          <GlassPanel className="rounded-xl overflow-hidden relative flex-1 p-0 border border-white/5" hover={false}>
-            {isConfigured ? (
-              <TacticalMap filter="all" showHeatmap={true} showWorkflows={true}>
-                <EmergencyFlowOverlay />
-              </TacticalMap>
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
-                Map Engine Offline
-              </div>
-            )}
+          <GlassPanel className="rounded-xl overflow-hidden relative flex-1 p-0 border border-white/5 min-h-[450px]" hover={false}>
+            <div className="absolute inset-0">
+              {isConfigured ? (
+                <TacticalMap filter="all" showHeatmap={true} showWorkflows={true}>
+                  <EmergencyFlowOverlay />
+                </TacticalMap>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
+                  Map Engine Offline
+                </div>
+              )}
+            </div>
             
             <div className="absolute top-6 left-6 z-20 flex items-center space-x-3 pointer-events-none">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white bg-black/60 px-2 py-1 rounded backdrop-blur-sm border border-white/10">Tactical Command</span>

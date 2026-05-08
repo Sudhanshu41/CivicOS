@@ -55,25 +55,26 @@ export default function CinematicBackground() {
 
       {/* Layer 3: Floating Neural Data Streams & Holographic Particles */}
       <div className="absolute inset-0 opacity-40">
-        <svg className="absolute inset-0 w-full h-full">
+        <svg className="absolute inset-0 w-full h-full opacity-30" viewBox="0 0 100 100" preserveAspectRatio="none">
            <motion.path 
-             d="M 10% -10% Q 20% 50% 10% 110%" 
+             d="M 10 -10 Q 20 50 10 110" 
              stroke="rgba(56, 189, 248, 0.15)" 
              strokeWidth="1" 
              fill="transparent" 
-             animate={{ d: ["M 10% -10% Q 20% 50% 10% 110%", "M 10% -10% Q 0% 50% 10% 110%", "M 10% -10% Q 20% 50% 10% 110%"] }} 
+             animate={{ d: ["M 10 -10 Q 20 50 10 110", "M 10 -10 Q 0 50 10 110", "M 10 -10 Q 20 50 10 110"] }} 
              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }} 
            />
            <motion.path 
-             d="M 90% -10% Q 80% 50% 90% 110%" 
-             stroke="rgba(168, 85, 247, 0.15)" 
-             strokeWidth="1" 
-             fill="transparent" 
-             animate={{ d: ["M 90% -10% Q 80% 50% 90% 110%", "M 90% -10% Q 100% 50% 90% 110%", "M 90% -10% Q 80% 50% 90% 110%"] }} 
-             transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }} 
-           />
+            d="M 90 -10 Q 80 50 90 110" 
+            stroke="white" 
+            strokeWidth="0.5" 
+            strokeDasharray="4 4"
+            fill="transparent"
+            animate={{ d: ["M 90 -10 Q 80 50 90 110", "M 90 -10 Q 100 50 90 110", "M 90 -10 Q 80 50 90 110"] }} 
+            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          />
            <motion.path 
-             d="M -10% 20% Q 50% 30% 110% 20%" 
+             d="M -10 20 Q 50 30 110 20" 
              stroke="rgba(56, 189, 248, 0.1)" 
              strokeWidth="2" 
              strokeDasharray="4 8"

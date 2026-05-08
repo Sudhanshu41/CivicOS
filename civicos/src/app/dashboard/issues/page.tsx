@@ -132,13 +132,15 @@ export default function CivicIssuesPage() {
         {/* 3. Center Column: Incident Map & Workflow */}
         <div className="w-full xl:w-2/4 flex flex-col space-y-8">
           <GlassPanel className="rounded-xl overflow-hidden relative flex-1 min-h-[400px] p-0" hover={false}>
-            {isConfigured ? (
-              <TacticalMap filter="all" showHeatmap={true} showWorkflows={true} />
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
-                Map Engine Offline
-              </div>
-            )}
+            <div className="absolute inset-0">
+              {isConfigured ? (
+                <TacticalMap filter="all" showHeatmap={true} showWorkflows={true} />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
+                  Map Engine Offline
+                </div>
+              )}
+            </div>
 
             <div className="absolute top-6 left-6 z-20 flex items-center space-x-3 pointer-events-none">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white bg-black/60 px-2 py-1 rounded backdrop-blur-sm border border-white/10">Live Incident Map</span>

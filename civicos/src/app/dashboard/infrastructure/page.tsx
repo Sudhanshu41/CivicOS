@@ -92,15 +92,17 @@ export default function InfrastructurePage() {
         {/* 3. Center Column: Grid View & Load Balancing */}
         <div className="w-full xl:w-2/4 flex flex-col space-y-8">
           <GlassPanel className="relative flex-1 min-h-[400px] overflow-hidden p-0 rounded-xl border border-white/5" hover={false}>
-            {isConfigured ? (
-              <TacticalMap filter="infrastructure" showHeatmap={true} showWorkflows={true}>
-                <InfrastructureIntelligenceOverlay />
-              </TacticalMap>
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
-                Map Engine Offline
-              </div>
-            )}
+            <div className="absolute inset-0">
+              {isConfigured ? (
+                <TacticalMap filter="infrastructure" showHeatmap={true} showWorkflows={true}>
+                  <InfrastructureIntelligenceOverlay />
+                </TacticalMap>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
+                  Map Engine Offline
+                </div>
+              )}
+            </div>
             <div className="absolute top-6 left-6 z-20 flex items-center space-x-3 pointer-events-none">
               <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white bg-black/60 px-2 py-1 rounded backdrop-blur-sm border border-white/10">Infrastructure Grid</span>
             </div>

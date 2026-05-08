@@ -252,7 +252,6 @@ export function TacticalMap({
       defaultCenter={DEFAULT_CITY_CENTER}
       defaultZoom={DEFAULT_ZOOM}
       mapId="civicos-tactical"
-      styles={CIVIC_MAP_STYLE}
       disableDefaultUI
       gestureHandling="greedy"
       className="w-full h-full"
