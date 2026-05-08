@@ -17,7 +17,7 @@ import {
   Activity,
   Clock
 } from "lucide-react";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNodesState, useEdgesState, Edge, Node } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -61,14 +61,19 @@ const initialEdges: Edge[] = [
   { id: "e-rout-not", source: "routing", target: "notify", animated: false },
 ];
 
+// Stable empty fallbacks — defined outside component to maintain referential equality
+const EMPTY_NODES: Record<string, any> = {};
+const EMPTY_TELEMETRY = { totalLatency: 0, tokensUsed: 0, retries: 0 };
+
 export default function OrchestrationPage() {
   useOrchestration(); // global event listener — no args needed anymore
-  const registry = useOrchestrationRegistry();
-  const activeId = registry.activeWorkflowId;
-  const activeWf = activeId ? registry.workflows[activeId] : null;
-  const liveNodes = activeWf?.nodes || {};
-  const status = activeWf?.status || "idle";
-  const telemetry = activeWf?.telemetry || { totalLatency: 0, tokensUsed: 0, retries: 0 };
+  const activeId = useOrchestrationRegistry(s => s.activeWorkflowId);
+  const workflows = useOrchestrationRegistry(s => s.workflows);
+  const activeWf = activeId ? workflows[activeId] : null;
+  // Stabilize liveNodes reference — avoid new {} on every render
+  const liveNodes = activeWf?.nodes ?? EMPTY_NODES;
+  const status = activeWf?.status ?? "idle";
+  const telemetry = activeWf?.telemetry ?? EMPTY_TELEMETRY;
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);

@@ -13,7 +13,6 @@ export function useWorkflowHistory() {
   const [history, setHistory] = useState<Record<string, unknown>[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const registry = useOrchestrationRegistry();
 
   const fetchHistory = useCallback(async () => {
     setIsLoading(true);
@@ -35,12 +34,11 @@ export function useWorkflowHistory() {
   const loadReplay = useCallback(async (workflowId: string) => {
     setIsLoading(true);
     try {
-      const data = await api.get<WorkflowState>(`/workflows/${workflowId}/trace`);
-      registry.initializeWorkflow(workflowId);
-      // We manually override the workflow state with replay data
-      // For now, just set status and active workflow
-      registry.setWorkflowStatus(workflowId, 'replay');
-      registry.setActiveWorkflow(workflowId);
+      await api.get<WorkflowState>(`/workflows/${workflowId}/trace`);
+      const reg = useOrchestrationRegistry.getState();
+      reg.initializeWorkflow(workflowId);
+      reg.setWorkflowStatus(workflowId, 'replay');
+      reg.setActiveWorkflow(workflowId);
       setError(null);
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -51,7 +49,7 @@ export function useWorkflowHistory() {
     } finally {
       setIsLoading(false);
     }
-  }, [registry]);
+  }, []);
 
   useEffect(() => {
     // eslint-disable-next-line

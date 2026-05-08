@@ -82,8 +82,9 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
         }
       };
 
-      ws.onerror = (error) => {
-        console.error("WebSocket Error:", error);
+      ws.onerror = () => {
+        // Backend not running — degrade silently in frontend-only dev mode
+        console.warn("[SocketProvider] WebSocket unavailable — running in offline mode.");
         setStatus("DEGRADED");
       };
 

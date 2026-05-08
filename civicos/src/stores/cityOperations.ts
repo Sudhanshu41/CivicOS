@@ -80,8 +80,21 @@ const SEED_DEPARTMENTS: DepartmentLoad[] = [
   { id: "public_safety",  name: "Public Safety", activeIncidents: 5, capacity: 10, status: "elevated" },
 ];
 
+const SEED_INCIDENTS: Record<string, CityIncident> = {
+  "inc-001": { id: "inc-001", title: "Pothole Cluster — MG Road", category: "infrastructure", severity: "medium", status: "active", location: { lat: 12.9716, lng: 77.5946, label: "MG Road" }, timestamp: new Date(Date.now() - 3600000).toISOString(), department: "infrastructure" },
+  "inc-002": { id: "inc-002", title: "Signal Failure — Brigade Rd", category: "traffic", severity: "high", status: "active", location: { lat: 12.9784, lng: 77.6408, label: "Indiranagar" }, timestamp: new Date(Date.now() - 2400000).toISOString(), department: "traffic" },
+  "inc-003": { id: "inc-003", title: "Gas Leak — Koramangala", category: "utility_failure", severity: "critical", status: "escalated", location: { lat: 12.9352, lng: 77.6245, label: "Koramangala" }, timestamp: new Date(Date.now() - 1800000).toISOString(), department: "utilities" },
+  "inc-004": { id: "inc-004", title: "Flooding — Rajajinagar", category: "environmental", severity: "high", status: "active", location: { lat: 12.9630, lng: 77.5476, label: "Rajajinagar" }, timestamp: new Date(Date.now() - 900000).toISOString(), department: "infrastructure" },
+  "inc-005": { id: "inc-005", title: "Fire Alarm — Mathikere", category: "emergency", severity: "critical", status: "escalated", location: { lat: 13.0067, lng: 77.5963, label: "Mathikere" }, timestamp: new Date(Date.now() - 600000).toISOString(), department: "emergency" },
+  "inc-006": { id: "inc-006", title: "Sewage Overflow — BTM", category: "sanitation", severity: "medium", status: "active", location: { lat: 12.9279, lng: 77.6271, label: "BTM Layout" }, timestamp: new Date(Date.now() - 300000).toISOString(), department: "sanitation" },
+  "inc-007": { id: "inc-007", title: "Power Outage — Malleswaram", category: "utility_failure", severity: "high", status: "active", location: { lat: 12.9820, lng: 77.5512, label: "Malleswaram" }, timestamp: new Date(Date.now() - 200000).toISOString(), department: "utilities" },
+  "inc-008": { id: "inc-008", title: "Vandalism — JP Nagar", category: "public_safety", severity: "low", status: "pending", location: { lat: 12.9007, lng: 77.6085, label: "JP Nagar" }, timestamp: new Date(Date.now() - 120000).toISOString(), department: "public_safety" },
+  "inc-009": { id: "inc-009", title: "Road Cave-In — Whitefield", category: "infrastructure", severity: "critical", status: "escalated", location: { lat: 12.9445, lng: 77.6930, label: "Whitefield" }, timestamp: new Date(Date.now() - 60000).toISOString(), department: "infrastructure" },
+  "inc-010": { id: "inc-010", title: "Crowd Control — Yeshwanthpur", category: "public_safety", severity: "medium", status: "active", location: { lat: 13.0298, lng: 77.5588, label: "Yeshwanthpur" }, timestamp: new Date(Date.now() - 30000).toISOString(), department: "public_safety" },
+};
+
 export const useCityOperations = create<CityOperationsState>((set) => ({
-  incidents: {},
+  incidents: SEED_INCIDENTS,
   departments: SEED_DEPARTMENTS,
   escalations: [],
   cityMetrics: {

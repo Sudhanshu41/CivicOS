@@ -9,10 +9,14 @@ import { useOrchestrationRegistry } from "../../stores/orchestrationRegistry";
  * CIVICOS — TELEMETRY GRID
  * Displays real-time global orchestration metrics.
  */
+// Stable fallback — defined outside component so the reference never changes
+const EMPTY_TELEMETRY = { retries: 0 };
+
 export function TelemetryGrid() {
   const systemTelemetry = useOrchestrationRegistry(state => state.systemTelemetry);
-  const activeId = useOrchestrationRegistry(state => state.activeWorkflowId);
-  const telemetry = useOrchestrationRegistry(state => activeId ? state.workflows[activeId]?.telemetry : { retries: 0 });
+  const activeId        = useOrchestrationRegistry(state => state.activeWorkflowId);
+  const workflows       = useOrchestrationRegistry(state => state.workflows);
+  const telemetry = activeId ? (workflows[activeId]?.telemetry ?? EMPTY_TELEMETRY) : EMPTY_TELEMETRY;
 
   const metrics = [
     { 
