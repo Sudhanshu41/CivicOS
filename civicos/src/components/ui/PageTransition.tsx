@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { pageTransitionVariants } from "@/lib/motionConfig";
+import { pageTransitionVariants } from "../../lib/motionConfig";
 import { usePathname } from "next/navigation";
 
 export function PageTransition({ children }: { children: React.ReactNode }) {

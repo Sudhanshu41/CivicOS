@@ -1,0 +1,53 @@
+"use client";
+
+import { Search, Bell, User } from "lucide-react";
+import { PulseIndicator } from "../motion/PulseIndicator";
+
+/**
+ * CIVICOS — DASHBOARD HEADER
+ * High-end cinematic top navigation bar.
+ */
+
+export function DashboardHeader() {
+  return (
+    <header className="h-16 shrink-0 z-20 flex items-center justify-between px-8 bg-black/80 backdrop-blur-2xl border-b border-white/5">
+      
+      {/* Search Bar */}
+      <div className="flex items-center">
+        <div className="hidden md:flex items-center rounded-lg px-3 py-1.5 w-64 bg-white/[0.02] border border-white/5 transition-all focus-within:border-white/10">
+          <Search className="w-4 h-4 text-gray-500 mr-2" />
+          <input 
+            type="text" 
+            placeholder="Search Intelligence..." 
+            className="bg-transparent border-none outline-none text-xs w-full text-white placeholder-gray-600 uppercase tracking-widest"
+          />
+        </div>
+      </div>
+
+      {/* Right Actions */}
+      <div className="flex items-center space-x-6">
+        <div className="hidden lg:flex items-center space-x-2 text-[10px] font-mono text-gray-400 px-3 py-1 rounded-full border border-white/5 bg-white/[0.01]">
+          <PulseIndicator status="online" size="xs" color="yellow" showLabel={false} />
+          <span className="tracking-[0.2em] uppercase">Network Optimized</span>
+        </div>
+        
+        <button className="relative text-gray-500 hover:text-white transition-colors">
+          <Bell className="w-4 h-4" />
+          <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-[#FFD500] rounded-full shadow-[0_0_5px_#FFD500]" />
+        </button>
+        
+        <div className="w-px h-4 bg-white/10" />
+        
+        <button className="flex items-center space-x-3 group">
+          <div className="text-right hidden md:block">
+            <div className="text-xs font-bold text-white group-hover:text-[#FFD500] transition-colors uppercase tracking-widest">Vance</div>
+            <div className="text-[9px] text-gray-500 font-mono uppercase">Admin</div>
+          </div>
+          <div className="w-8 h-8 rounded-full flex items-center justify-center bg-white/[0.02] border border-white/10 group-hover:border-white/20 transition-all">
+            <User className="w-4 h-4 text-gray-400" />
+          </div>
+        </button>
+      </div>
+    </header>
+  );
+}

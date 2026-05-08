@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { neuralPulse } from "@/lib/motionConfig";
+import { neuralPulse } from "../../lib/motionConfig";
 
 export function PulseNode({ 
   color = "blue", 

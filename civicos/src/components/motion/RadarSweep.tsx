@@ -3,13 +3,18 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-export function RadarSweep({ color = "blue", className = "" }: { color?: "blue" | "green" | "red"; className?: string }) {
-  const colorMap = {
+type RadarColor = "blue" | "green" | "red" | "white" | "yellow";
+
+export function RadarSweep({ color = "blue", className = "" }: { color?: RadarColor; className?: string }) {
+  const colorMap: Record<RadarColor, { stroke: string; fill: string; conic: string }> = {
     blue: { stroke: "#3b82f6", fill: "rgba(59,130,246,0.05)", conic: "rgba(59,130,246,0.3)" },
     green: { stroke: "#10b981", fill: "rgba(16,185,129,0.05)", conic: "rgba(16,185,129,0.3)" },
     red: { stroke: "#ef4444", fill: "rgba(239,68,68,0.05)", conic: "rgba(239,68,68,0.3)" },
+    white: { stroke: "rgba(255,255,255,0.4)", fill: "rgba(255,255,255,0.02)", conic: "rgba(255,255,255,0.1)" },
+    yellow: { stroke: "#FFD500", fill: "rgba(255,213,0,0.02)", conic: "rgba(255,213,0,0.2)" },
   };
-  const c = colorMap[color];
+  
+  const c = colorMap[color] || colorMap.blue;
 
   return (
     <div className={`relative rounded-full overflow-hidden ${className}`}>

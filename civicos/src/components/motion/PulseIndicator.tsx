@@ -11,7 +11,7 @@ interface PulseIndicatorProps {
   showLabel?: boolean;
   className?: string;
   labelClassName?: string;
-  color?: "blue" | "emerald" | "purple" | "rose" | "yellow" | "cyan" | "gray";
+  color?: "blue" | "emerald" | "purple" | "rose" | "yellow" | "cyan" | "gray" | "white";
 }
 
 const colorConfigs = {
@@ -22,6 +22,7 @@ const colorConfigs = {
   yellow:  { core: "#f59e0b", ring: "rgba(245,158,11,0.4)",  text: "text-yellow-400" },
   cyan:    { core: "#06b6d4", ring: "rgba(6,182,212,0.4)",   text: "text-cyan-400" },
   gray:    { core: "#6b7280", ring: "rgba(107,114,128,0.3)", text: "text-gray-500" },
+  white:   { core: "#ffffff", ring: "rgba(255,255,255,0.4)", text: "text-white" },
 };
 
 const statusConfig: Record<PulseStatus, { core: string; ring: string; text: string; label: string }> = {

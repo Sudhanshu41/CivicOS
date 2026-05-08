@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useSpring } from "framer-motion";
-import { useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { ThemeColor } from "../../types";
+
+/**
+ * CIVICOS — METRIC COUNTER
+ * Production-grade animated counter with live fluctuation support.
+ */
 
 interface MetricCounterProps {
   value: number;
@@ -17,16 +22,18 @@ interface MetricCounterProps {
   valueClassName?: string;
   label?: string;
   trend?: "up" | "down" | "stable";
-  color?: "blue" | "emerald" | "purple" | "rose" | "yellow" | "cyan";
+  color?: ThemeColor;
 }
 
-const colorMap = {
+const colorMap: Record<ThemeColor, string> = {
   blue:    "text-blue-400",
   emerald: "text-emerald-400",
   purple:  "text-purple-400",
   rose:    "text-rose-400",
-  yellow:  "text-yellow-400",
+  yellow:  "text-[#FFD500]",
   cyan:    "text-cyan-400",
+  white:   "text-white",
+  gray:    "text-gray-500",
 };
 
 export function MetricCounter({
@@ -42,37 +49,39 @@ export function MetricCounter({
   valueClassName = "",
   label,
   trend,
-  color = "blue",
+  color = "white",
 }: MetricCounterProps) {
   const [current, setCurrent] = useState(value);
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: false });
 
-  // Fluctuating live metric
+  // --- Live Fluctuation Logic ---
   useEffect(() => {
     if (!fluctuate) return;
     const id = setInterval(() => {
       const delta = (Math.random() - 0.5) * fluctuateRange * 2;
       const base = target ?? value;
-      setCurrent(Math.max(0, Math.min(100, parseFloat((base + delta).toFixed(decimals)))));
+      setCurrent(Math.max(0, parseFloat((base + delta).toFixed(decimals))));
     }, interval);
     return () => clearInterval(id);
   }, [fluctuate, fluctuateRange, interval, target, value, decimals]);
 
-  // Count-up animation on enter
+  // --- Count-up on Initial View ---
   useEffect(() => {
     if (!inView || fluctuate) return;
     const end = target ?? value;
     const duration = 1800;
-    const start = Date.now();
+    const startTime = Date.now();
     let frame: number;
+
     const tick = () => {
-      const elapsed = Date.now() - start;
+      const elapsed = Date.now() - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
+      const eased = 1 - Math.pow(1 - progress, 4); // Cubic easing
       setCurrent(parseFloat((eased * end).toFixed(decimals)));
       if (progress < 1) frame = requestAnimationFrame(tick);
     };
+
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [inView, target, value, decimals, fluctuate]);
@@ -84,16 +93,16 @@ export function MetricCounter({
     <div className={`flex flex-col ${className}`}>
       <motion.span
         ref={ref}
-        key={Math.round(current * 10)}
-        className={`font-bold font-mono tabular-nums ${colorMap[color]} ${valueClassName}`}
-        animate={{ opacity: [0.7, 1] }}
-        transition={{ duration: 0.15 }}
+        key={Math.round(current * 100)}
+        className={`font-medium font-mono tabular-nums tracking-tighter ${colorMap[color]} ${valueClassName}`}
+        animate={{ opacity: [0.7, 1], y: [2, 0] }}
+        transition={{ duration: 0.2 }}
       >
         {prefix}{current.toFixed(decimals)}{suffix}
       </motion.span>
       {(label || trend) && (
-        <div className="flex items-center gap-1.5 mt-0.5">
-          {label && <span className="text-[9px] text-gray-500 uppercase tracking-widest font-semibold">{label}</span>}
+        <div className="flex items-center gap-1.5 mt-1">
+          {label && <span className="text-[9px] text-gray-500 uppercase tracking-widest font-bold">{label}</span>}
           {trend && <span className={`text-[9px] font-bold ${trendColor}`}>{trendIcon}</span>}
         </div>
       )}

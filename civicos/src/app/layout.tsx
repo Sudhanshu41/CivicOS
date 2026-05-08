@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
-import CinematicBackground from "@/components/ui/CinematicBackground";
-import { DataStream } from "@/components/motion/DataStream";
-import { ScanlineOverlay } from "@/components/ui/ScanlineOverlay";
-import { NeuralBackground } from "@/components/motion/NeuralBackground";
-import { CursorGlow } from "@/components/motion/CursorGlow";
-import { HoloNotification } from "@/components/motion/HoloNotification";
+import CinematicBackground from "../components/ui/CinematicBackground";
+import { DataStream } from "../components/motion/DataStream";
+import { ScanlineOverlay } from "../components/ui/ScanlineOverlay";
+import { NeuralBackground } from "../components/motion/NeuralBackground";
+import { CursorGlow } from "../components/motion/CursorGlow";
+import { HoloNotification } from "../components/motion/HoloNotification";
 import "./globals.css";
 
 const outfit = Outfit({
