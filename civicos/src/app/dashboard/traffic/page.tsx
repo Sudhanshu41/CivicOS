@@ -14,7 +14,9 @@ import {
 import { useEffect, useState } from "react";
 
 import { TrafficMetrics } from "../../../components/dashboard/traffic/TrafficMetrics";
-import { ControlGrid } from "../../../components/dashboard/traffic/ControlGrid";
+import { TacticalMap } from "../../../components/maps/TacticalMap";
+import { TrafficFlowOverlay } from "../../../components/maps/overlays/TrafficFlowOverlay";
+import { useMapContext } from "../../../providers/MapProvider";
 import { ActivityFeed } from "../../../components/motion/ActivityFeed";
 import { LiveStatusIndicator } from "../../../components/motion/LiveStatusIndicator";
 import { PulseIndicator } from "../../../components/motion/PulseIndicator";
@@ -26,6 +28,7 @@ import { GlassPanel } from "../../../components/ui/GlassPanel";
  */
 export default function TrafficPage() {
   const [activeSignal, setActiveSignal] = useState(0);
+  const { isConfigured } = useMapContext();
 
   // Simulation: Signal cycling
   useEffect(() => {
@@ -88,8 +91,22 @@ export default function TrafficPage() {
         </div>
 
         {/* 3. Center Column: Live Control Map */}
-        <div className="w-full xl:w-2/4 flex flex-col">
-          <ControlGrid />
+        <div className="w-full xl:w-2/4 flex flex-col h-full min-h-[450px]">
+          <GlassPanel className="relative flex-1 overflow-hidden p-0 rounded-xl border border-white/5" hover={false}>
+            {isConfigured ? (
+              <TacticalMap filter="traffic" showHeatmap={true} showWorkflows={true}>
+                <TrafficFlowOverlay />
+              </TacticalMap>
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
+                Map Engine Offline
+              </div>
+            )}
+            {/* Overlay Header */}
+            <div className="absolute top-6 left-6 z-20 flex items-center space-x-3 pointer-events-none">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white bg-black/60 px-2 py-1 rounded backdrop-blur-sm border border-white/10">Live Traffic Control Grid</span>
+            </div>
+          </GlassPanel>
         </div>
 
         {/* 4. Right Column: Controls & Feeds */}

@@ -20,7 +20,9 @@ import {
   Zap 
 } from "lucide-react";
 
-import { TacticalMap } from "../../../components/dashboard/emergency/TacticalMap";
+import { TacticalMap } from "../../../components/maps/TacticalMap";
+import { EmergencyFlowOverlay } from "../../../components/maps/overlays/EmergencyFlowOverlay";
+import { useMapContext } from "../../../providers/MapProvider";
 import { ActivityFeed } from "../../../components/motion/ActivityFeed";
 import { LiveStatusIndicator } from "../../../components/motion/LiveStatusIndicator";
 import { PulseIndicator } from "../../../components/motion/PulseIndicator";
@@ -33,6 +35,8 @@ import { staggerContainer, fadeSlideUp } from "../../../lib/motionConfig";
  * Refactored for production-grade modularity and mission-critical reliability.
  */
 export default function EmergencyPage() {
+  const { isConfigured } = useMapContext();
+
   return (
     <div className="flex flex-col space-y-8 min-h-[calc(100vh-10rem)]">
       
@@ -84,8 +88,34 @@ export default function EmergencyPage() {
         </div>
 
         {/* 2. Center Column: Tactical Command */}
-        <div className="w-full xl:w-2/4 flex flex-col space-y-8">
-          <TacticalMap />
+        <div className="w-full xl:w-2/4 flex flex-col space-y-8 h-full min-h-[450px]">
+          <GlassPanel className="rounded-xl overflow-hidden relative flex-1 p-0 border border-white/5" hover={false}>
+            {isConfigured ? (
+              <TacticalMap filter="all" showHeatmap={true} showWorkflows={true}>
+                <EmergencyFlowOverlay />
+              </TacticalMap>
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
+                Map Engine Offline
+              </div>
+            )}
+            
+            <div className="absolute top-6 left-6 z-20 flex items-center space-x-3 pointer-events-none">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white bg-black/60 px-2 py-1 rounded backdrop-blur-sm border border-white/10">Tactical Command</span>
+            </div>
+
+            {/* Tactical Indicators */}
+            <div className="absolute bottom-6 left-6 right-6 z-10 flex justify-between pointer-events-none">
+              <div className="bg-black/80 backdrop-blur-xl px-3 py-1.5 border border-rose-500/20 rounded-md flex items-center space-x-2 pointer-events-auto">
+                <div className="w-1.5 h-1.5 bg-rose-500 rounded-full shadow-[0_0_5px_#f43f5e]" />
+                <span className="text-[9px] font-bold tracking-widest text-rose-500 uppercase">Crisis: Isolated</span>
+              </div>
+              <div className="bg-black/80 backdrop-blur-xl px-3 py-1.5 border border-white/10 rounded-md flex items-center space-x-2 pointer-events-auto">
+                <div className="w-1.5 h-1.5 bg-white rounded-full shadow-[0_0_5px_white]" />
+                <span className="text-[9px] font-bold tracking-widest text-white uppercase">Evac Path: Secure</span>
+              </div>
+            </div>
+          </GlassPanel>
 
           <motion.div 
             variants={staggerContainer}

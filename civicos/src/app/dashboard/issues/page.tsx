@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
+import { TacticalMap } from "../../../components/maps/TacticalMap";
+import { useMapContext } from "../../../providers/MapProvider";
 import { ResolutionWorkflow } from "../../../components/dashboard/issues/ResolutionWorkflow";
 import { ActivityFeed } from "../../../components/motion/ActivityFeed";
 import { LiveStatusIndicator } from "../../../components/motion/LiveStatusIndicator";
@@ -36,6 +38,7 @@ import { staggerContainer, fadeSlideUp } from "../../../lib/motionConfig";
  */
 export default function CivicIssuesPage() {
   const [activeWorkflow, setActiveWorkflow] = useState(0);
+  const { isConfigured } = useMapContext();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -128,40 +131,17 @@ export default function CivicIssuesPage() {
 
         {/* 3. Center Column: Incident Map & Workflow */}
         <div className="w-full xl:w-2/4 flex flex-col space-y-8">
-          <GlassPanel className="rounded-xl overflow-hidden relative flex-1 min-h-[400px]" hover={false}>
-            {/* Map */}
-            <div className="absolute inset-0 bg-black">
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1519501025264-65ba15a82390?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center opacity-10 mix-blend-screen grayscale" />
-              <div className="absolute inset-0 bg-grid opacity-10 mix-blend-screen" />
-            </div>
-
-            <div className="absolute top-6 left-6 z-20 flex items-center space-x-3">
-              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">Live Incident Map</span>
-              <MapPin className="w-3.5 h-3.5 text-gray-500" />
-            </div>
-
-            {/* Simulated Markers */}
-            <div className="absolute inset-0 z-10 pointer-events-none">
-              <div className="absolute top-[30%] left-[20%] flex flex-col items-center">
-                <div className="w-7 h-7 rounded-full border border-[#FFD500] bg-black/40 backdrop-blur-md flex items-center justify-center pointer-events-auto">
-                  <AlertTriangle className="w-3.5 h-3.5 text-[#FFD500]" />
-                </div>
-                <div className="mt-3 text-[8px] font-mono text-[#FFD500] uppercase tracking-widest bg-black/80 px-2 py-0.5 rounded border border-[#FFD500]/20">Pothole (S-7)</div>
+          <GlassPanel className="rounded-xl overflow-hidden relative flex-1 min-h-[400px] p-0" hover={false}>
+            {isConfigured ? (
+              <TacticalMap filter="all" showHeatmap={true} showWorkflows={true} />
+            ) : (
+              <div className="absolute inset-0 flex items-center justify-center bg-black/50 text-gray-500 font-mono text-xs uppercase tracking-widest">
+                Map Engine Offline
               </div>
+            )}
 
-              <div className="absolute top-[60%] left-[70%] flex flex-col items-center">
-                <div className="w-7 h-7 rounded-full border border-white bg-black/40 backdrop-blur-md flex items-center justify-center pointer-events-auto">
-                  <Droplet className="w-3.5 h-3.5 text-white" />
-                </div>
-                <div className="mt-3 text-[8px] font-mono text-white uppercase tracking-widest bg-black/80 px-2 py-0.5 rounded border border-white/20">Water Leak</div>
-              </div>
-
-              <div className="absolute top-[75%] left-[30%] flex flex-col items-center">
-                <div className="w-7 h-7 rounded-full border border-gray-500 bg-black/40 backdrop-blur-md flex items-center justify-center pointer-events-auto">
-                  <Trash2 className="w-3.5 h-3.5 text-gray-400" />
-                </div>
-                <div className="mt-3 text-[8px] font-mono text-gray-400 uppercase tracking-widest bg-black/80 px-2 py-0.5 rounded border border-white/5">Waste Overflow</div>
-              </div>
+            <div className="absolute top-6 left-6 z-20 flex items-center space-x-3 pointer-events-none">
+              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white bg-black/60 px-2 py-1 rounded backdrop-blur-sm border border-white/10">Live Incident Map</span>
             </div>
           </GlassPanel>
 

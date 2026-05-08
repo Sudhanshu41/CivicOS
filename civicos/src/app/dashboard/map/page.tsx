@@ -9,10 +9,10 @@ import {
   Brain, Cpu, History, Clock, BarChart3
 } from "lucide-react";
 
-import { CivicMap } from "../../../components/dashboard/map/CivicMap";
-import { DepartmentCoverageOverlay } from "../../../components/dashboard/map/DepartmentCoverageOverlay";
-import { WorkflowPropagationOverlay } from "../../../components/dashboard/map/WorkflowPropagationOverlay";
-import { InfrastructureIntelligenceOverlay } from "../../../components/dashboard/map/InfrastructureIntelligenceOverlay";
+import { TacticalMap } from "../../../components/maps/TacticalMap";
+import { DepartmentCoverageOverlay } from "../../../components/maps/overlays/DepartmentCoverageOverlay";
+import { WorkflowPropagationOverlay } from "../../../components/maps/overlays/WorkflowPropagationOverlay";
+import { InfrastructureIntelligenceOverlay } from "../../../components/maps/overlays/InfrastructureIntelligenceOverlay";
 import { OperationalTimeline } from "../../../components/dashboard/map/OperationalTimeline";
 import { GeospatialReplayHUD } from "../../../components/dashboard/map/GeospatialReplayHUD";
 import { HistoricalUrbanAnalytics } from "../../../components/dashboard/map/HistoricalUrbanAnalytics";
@@ -294,7 +294,7 @@ export default function DigitalTwinMapPage() {
           {/* Map render */}
           <div className="absolute inset-0">
             {isConfigured ? (
-              <CivicMap
+              <TacticalMap
                 filter={activeFilter}
                 showHeatmap={layers.heatmap}
                 showWorkflows={layers.workflows}
@@ -304,7 +304,7 @@ export default function DigitalTwinMapPage() {
                 {layers.departments   && <DepartmentCoverageOverlay />}
                 {layers.propagation   && <WorkflowPropagationOverlay />}
                 {layers.infrastructure && <InfrastructureIntelligenceOverlay />}
-              </CivicMap>
+              </TacticalMap>
             ) : (
               <TacticalMapFallback />
             )}

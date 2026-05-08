@@ -7,21 +7,21 @@ import {
   useMap,
   useMapsLibrary,
 } from "@vis.gl/react-google-maps";
-import { useOrchestrationRegistry } from "../../../stores/orchestrationRegistry";
-import { useCityOperations, CityIncident } from "../../../stores/cityOperations";
+import { useOrchestrationRegistry } from "../../stores/orchestrationRegistry";
+import { useCityOperations, CityIncident } from "../../stores/cityOperations";
 import {
   CIVIC_MAP_STYLE,
   DEFAULT_CITY_CENTER,
   DEFAULT_ZOOM,
-} from "../../../providers/MapProvider";
+} from "../../providers/MapProvider";
 import {
   CATEGORY_HEX,
   SEVERITY_ZINDEX,
   getCityZonePoint,
   jitterPoint,
   type GeoIncident,
-} from "../../../lib/geoUtils";
-import { useReplayStore } from "../../../stores/replayStore";
+} from "../../lib/geoUtils";
+import { useReplayStore } from "../../stores/replayStore";
 
 // ─── Incident Marker ────────────────────────────────────────────────────────
 
@@ -177,9 +177,9 @@ function HeatmapLayer({ incidents }: { incidents: GeoIncident[] }) {
   return null;
 }
 
-// ─── Main CivicMap Component ─────────────────────────────────────────────────
+// ─── Main TacticalMap Component ─────────────────────────────────────────────────
 
-export interface CivicMapProps {
+export interface TacticalMapProps {
   filter?: string;
   showHeatmap?: boolean;
   showWorkflows?: boolean;
@@ -188,14 +188,14 @@ export interface CivicMapProps {
   children?: React.ReactNode;
 }
 
-export function CivicMap({
+export function TacticalMap({
   filter = "all",
   showHeatmap = true,
   showWorkflows = true,
   onIncidentSelect,
   selectedIncidentId,
   children,
-}: CivicMapProps) {
+}: TacticalMapProps) {
   const storedIncidents = useCityOperations((s) => s.incidents);
   const workflows       = useOrchestrationRegistry((s) => s.workflows);
   const { status: replayStatus, currentTime, startTime } = useReplayStore();
