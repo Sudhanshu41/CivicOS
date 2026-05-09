@@ -4,7 +4,7 @@ import CinematicBackground from "../components/ui/CinematicBackground";
 import { DataStream } from "../components/motion/DataStream";
 import { ScanlineOverlay } from "../components/ui/ScanlineOverlay";
 import { NeuralBackground } from "../components/motion/NeuralBackground";
-import { CursorGlow } from "../components/motion/CursorGlow";
+
 import { HoloNotification } from "../components/motion/HoloNotification";
 import "./globals.css";
 
@@ -31,7 +31,7 @@ export default function RootLayout({
         <DataStream direction="down" />
         <ScanlineOverlay />
         {/* Global microinteraction layer */}
-        <CursorGlow />
+
         <HoloNotification />
         <div className="relative z-10 flex-1 flex flex-col">
           {children}

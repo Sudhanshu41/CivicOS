@@ -1,9 +1,11 @@
 "use client";
 
-import { Search, Bell, User, Activity } from "lucide-react";
+import { Bell, User, Activity } from "lucide-react";
 import { PulseIndicator } from "../motion/PulseIndicator";
 import { useSocket } from "../../providers/SocketProvider";
 import { useOrchestrationRegistry } from "../../stores/orchestrationRegistry";
+import { useUIStore } from "../../stores/uiStore";
+import { Bot, PlusCircle } from "lucide-react";
 
 /**
  * CIVICOS — DASHBOARD HEADER
@@ -15,8 +17,9 @@ export function DashboardHeader() {
   const socket = useSocket();
   const status = socket?.status || "DISCONNECTED";
   const health = useOrchestrationRegistry(state => state.health);
+  const { openAiCopilot, openIncidentModal } = useUIStore();
 
-  const getStatusColor = () => {
+  const getStatusColor = (): "yellow" | "red" | "gray" => {
     switch (status) {
       case "CONNECTED": return "yellow";
       case "CONNECTING":
@@ -39,16 +42,26 @@ export function DashboardHeader() {
   return (
     <header className="h-16 shrink-0 z-20 flex items-center justify-between px-8 bg-black/80 backdrop-blur-2xl border-b border-white/5">
       
-      {/* Search Bar */}
-      <div className="flex items-center">
-        <div className="hidden md:flex items-center rounded-lg px-3 py-1.5 w-64 bg-white/[0.02] border border-white/5 transition-all focus-within:border-white/10">
-          <Search className="w-4 h-4 text-gray-500 mr-2" />
-          <input 
-            type="text" 
-            placeholder="Search Intelligence..." 
-            className="bg-transparent border-none outline-none text-xs w-full text-white placeholder-gray-600 uppercase tracking-widest"
-          />
-        </div>
+      {/* AI Command Interface / Search */}
+      <div className="flex items-center space-x-4">
+        <button 
+          onClick={openAiCopilot}
+          className="hidden md:flex items-center rounded-lg px-3 py-1.5 w-64 bg-white/[0.02] border border-white/5 transition-all hover:border-[#FFD500]/50 hover:bg-[#FFD500]/5 group"
+        >
+          <Bot className="w-4 h-4 text-[#FFD500] mr-2 group-hover:animate-pulse" />
+          <span className="text-xs w-full text-left text-gray-500 group-hover:text-white uppercase tracking-widest transition-colors font-mono">
+            Command AI...
+          </span>
+          <div className="text-[9px] text-gray-600 bg-white/5 px-1.5 py-0.5 rounded ml-auto font-mono">⌘K</div>
+        </button>
+
+        <button 
+          onClick={openIncidentModal}
+          className="hidden lg:flex items-center px-3 py-1.5 rounded-lg border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 hover:border-red-500/50 transition-all text-red-400 group"
+        >
+          <PlusCircle className="w-4 h-4 mr-2 group-hover:animate-spin-slow" />
+          <span className="text-[10px] font-bold uppercase tracking-widest">Report Incident</span>
+        </button>
       </div>
 
       {/* Right Actions */}
@@ -68,7 +81,7 @@ export function DashboardHeader() {
           <PulseIndicator 
             status={status === "CONNECTED" ? "active" : "offline"} 
             size="xs" 
-            color={getStatusColor() as any} 
+            color={getStatusColor()} 
             showLabel={false} 
           />
           <span className="tracking-[0.2em] uppercase">{getStatusLabel()}</span>

@@ -9,6 +9,10 @@ import { DashboardSidebar } from "../../components/layout/DashboardSidebar";
 import { DashboardHeader } from "../../components/layout/DashboardHeader";
 import { SocketProvider } from "../../providers/SocketProvider";
 import { MapProvider } from "../../providers/MapProvider";
+import { AICopilotPanel } from "../../components/dashboard/ai/AICopilotPanel";
+import { IncidentSubmissionModal } from "../../components/dashboard/issues/IncidentSubmissionModal";
+import { useUIStore } from "../../stores/uiStore";
+import { useEffect as ReactUseEffect } from "react";
 
 /**
  * CIVICOS — DASHBOARD LAYOUT
@@ -21,6 +25,18 @@ export default function DashboardLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const pathname = usePathname();
+  const { toggleAiCopilot } = useUIStore();
+
+  ReactUseEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        toggleAiCopilot();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [toggleAiCopilot]);
 
   return (
     <MapProvider>
@@ -53,6 +69,10 @@ export default function DashboardLayout({
               </AnimatePresence>
             </main>
           </div>
+          
+          {/* Overlays */}
+          <AICopilotPanel />
+          <IncidentSubmissionModal />
         </div>
       </SocketProvider>
     </MapProvider>
