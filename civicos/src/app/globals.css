@@ -117,3 +117,12 @@ body {
   background: #FFD500;
   color: #000000;
 }
+
+/* ── SIMPLE BOLD CURSOR ────────────────────────────── */
+body, html {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='white' stroke='black' stroke-width='2'%3E%3Cpolygon points='4,4 20,10 12,14 8,22' /%3E%3C/svg%3E") 4 4, auto;
+}
+
+button, a, [role="button"], input, select, textarea {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='%23FFD500' stroke='black' stroke-width='2'%3E%3Cpolygon points='4,4 20,10 12,14 8,22' /%3E%3C/svg%3E") 4 4, pointer;
+}

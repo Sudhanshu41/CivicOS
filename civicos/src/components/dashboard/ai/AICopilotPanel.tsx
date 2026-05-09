@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Bot, Sparkles, Terminal, Activity } from "lucide-react";
 import { useUIStore } from "../../../stores/uiStore";
 import { useCityOperations } from "../../../stores/cityOperations";
+import { useOrchestrationRegistry } from "../../../stores/orchestrationRegistry";
 
 interface Message {
   id: string;
@@ -15,20 +16,21 @@ interface Message {
 }
 
 const SUGGESTIONS = [
-  "Show active emergencies",
-  "Why is Traffic Control overloaded?",
-  "Summarize current city risk",
-  "Predict escalation zones"
+  "Analyze Active Incidents",
+  "Summarize Infrastructure Health",
+  "Predict Congestion Zones",
+  "Generate Operational Briefing"
 ];
 
 export function AICopilotPanel() {
   const { aiCopilotOpen, closeAiCopilot } = useUIStore();
-  const { cityMetrics } = useCityOperations();
+  const { cityMetrics, departments, incidents } = useCityOperations();
+  const workflows = useOrchestrationRegistry((s) => s.workflows);
   const [messages, setMessages] = useState<Message[]>(() => [
     {
       id: "init",
       role: "ai",
-      content: "CivicOS Core AI initialized. I am monitoring city orchestration, traffic anomalies, and active emergencies. How can I assist your command?",
+      content: "CIVIC CORE operational intelligence initialized. I am monitoring live city orchestration, telemetry anomalies, and workflows. How can I assist command?",
       timestamp: new Date().toISOString()
     }
   ]);
@@ -56,32 +58,71 @@ export function AICopilotPanel() {
     setInput("");
     setIsTyping(true);
 
+    const startTime = Date.now();
+    const aiMsgId = (Date.now() + 1).toString();
+
+    // Insert an empty AI message to stream into
+    setMessages(prev => [...prev, {
+      id: aiMsgId,
+      role: "ai",
+      content: "",
+      timestamp: new Date().toISOString()
+    }]);
+
     try {
       const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text, context: { cityMetrics } })
+        body: JSON.stringify({ 
+          message: text, 
+          context: { 
+            cityMetrics, 
+            departments, 
+            incidents,
+            workflows: Object.values(workflows).map(w => ({
+              id: w.issue_id,
+              status: w.status,
+              priority: w.priority,
+              reasoning: w.reasoning,
+              stepCount: Object.keys(w.nodes).length
+            }))
+          } 
+        })
       });
       
-      const data = await res.json();
-      
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: "ai",
-        content: data.reply || "I encountered a processing anomaly.",
-        timestamp: new Date().toISOString(),
-        telemetry: data.telemetry
-      }]);
+      setIsTyping(false);
+
+      if (!res.body) throw new Error("No response body");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        if (value) {
+          const chunk = decoder.decode(value, { stream: !done });
+          setMessages(prev => prev.map(m => 
+            m.id === aiMsgId ? { ...m, content: m.content + chunk } : m
+          ));
+        }
+      }
+
+      // Add latency telemetry when done
+      const latency = Date.now() - startTime;
+      setMessages(prev => prev.map(m => 
+        m.id === aiMsgId ? { 
+          ...m, 
+          telemetry: { confidence: 94 + Math.floor(Math.random() * 5), latency } 
+        } : m
+      ));
 
     } catch (_error) {
-      setMessages(prev => [...prev, {
-        id: (Date.now() + 1).toString(),
-        role: "ai",
-        content: "System anomaly: Unable to reach AI orchestration core.",
-        timestamp: new Date().toISOString()
-      }]);
-    } finally {
       setIsTyping(false);
+      setMessages(prev => prev.map(m => 
+        m.id === aiMsgId ? { ...m, content: "System anomaly: Unable to reach AI orchestration core. Verify API Key." } : m
+      ));
     }
   };
 
@@ -113,10 +154,10 @@ export function AICopilotPanel() {
                   <Bot className="w-5 h-5 text-[#FFD500]" />
                 </div>
                 <div>
-                  <h2 className="text-sm font-bold uppercase tracking-widest text-white flex items-center">
-                    CivicOS Copilot <span className="ml-2 w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]" />
+                  <h2 className="text-sm font-bold uppercase tracking-[0.2em] text-white flex items-center">
+                    CIVIC CORE <span className="ml-2 w-1.5 h-1.5 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]" />
                   </h2>
-                  <p className="text-[10px] text-gray-500 font-mono uppercase">Operational AI Core</p>
+                  <p className="text-[10px] text-gray-500 font-mono uppercase">Urban Intelligence Engine</p>
                 </div>
               </div>
               <button 
@@ -127,8 +168,40 @@ export function AICopilotPanel() {
               </button>
             </div>
 
-            {/* Chat Area */}
+            {/* Chat Area / Intelligence Feed */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6 custom-scrollbar">
+              {messages.length === 1 && (
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 mb-8">
+                  <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-4">
+                    <div className="flex items-center space-x-2 border-b border-white/5 pb-2">
+                      <Activity className="w-4 h-4 text-[#FFD500]" />
+                      <h3 className="text-xs font-bold text-white uppercase tracking-widest">Live Intelligence Feed</h3>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center text-[10px] font-mono uppercase">
+                        <span className="text-gray-500">Active Incidents</span>
+                        <span className="text-rose-400 font-bold">{Object.keys(incidents).length}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[10px] font-mono uppercase">
+                        <span className="text-gray-500">Infrastructure Risk</span>
+                        <span className="text-amber-400 font-bold">Elevated</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[10px] font-mono uppercase">
+                        <span className="text-gray-500">Orchestration Health</span>
+                        <span className="text-emerald-400 font-bold">{cityMetrics.aiCoordinationScore}%</span>
+                      </div>
+                      <div className="flex justify-between items-center text-[10px] font-mono uppercase">
+                        <span className="text-gray-500">Emergency Load</span>
+                        <span className="text-white font-bold">{departments.find(d => d.id === 'emergency')?.activeIncidents || 0} / {departments.find(d => d.id === 'emergency')?.capacity || 10}</span>
+                      </div>
+                    </div>
+                    <div className="pt-2 border-t border-white/5">
+                      <p className="text-[10px] text-gray-400 font-mono italic">&quot;Traffic flows in Sector 4 are being actively rerouted by the AI Mesh due to overlapping emergency signals.&quot;</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
               {messages.map((msg) => (
                 <motion.div 
                   initial={{ opacity: 0, y: 10 }}

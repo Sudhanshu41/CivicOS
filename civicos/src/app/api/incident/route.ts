@@ -10,19 +10,8 @@ export async function POST(req: Request) {
     const description = formData.get("description") as string;
     const file = formData.get("file") as File | null;
 
-    let hasKey = !!process.env.GEMINI_API_KEY;
-
-    if (!hasKey) {
-      // Graceful degradation / Mock Response
-      await new Promise((r) => setTimeout(r, 1500));
-      return NextResponse.json({
-        category: title.toLowerCase().includes("fire") ? "emergency" : "infrastructure",
-        severity: "high",
-        department: title.toLowerCase().includes("fire") ? "emergency" : "infrastructure",
-        inferredTitle: title || "Unidentified Incident",
-        summary: "Simulated AI Analysis: Infrastructure or Emergency incident detected.",
-        confidence: 88,
-      });
+    if (!process.env.GEMINI_API_KEY) {
+      throw new Error("GEMINI_API_KEY is not configured.");
     }
 
     // Prepare content for Gemini

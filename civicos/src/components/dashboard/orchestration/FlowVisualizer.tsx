@@ -1,12 +1,9 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Network } from "lucide-react";
-import { ReactFlow, Background, Node, Edge } from "@xyflow/react";
+import { ReactFlow, Background, Node, Edge, OnNodesChange, OnEdgesChange } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { PulseIndicator } from "../../motion/PulseIndicator";
-import { MagneticButton } from "../../motion/MagneticButton";
-import { GlassPanel } from "../../ui/GlassPanel";
 import { AgentNode } from "./AgentNode";
 
 /**
@@ -22,9 +19,9 @@ const nodeTypes = {
 interface FlowVisualizerProps {
   nodes: Node[];
   edges: Edge[];
-  onNodesChange: any;
-  onEdgesChange: any;
-  onNodeClick?: (event: any, node: Node) => void;
+  onNodesChange: OnNodesChange;
+  onEdgesChange: OnEdgesChange;
+  onNodeClick?: (event: React.MouseEvent, node: Node) => void;
   status?: string;
 }
 
@@ -44,9 +41,7 @@ export function FlowVisualizer({
           <Network className="w-4 h-4 text-gray-500" />
         </div>
         <div className="flex items-center gap-4">
-          <MagneticButton className="px-3 py-1 rounded-sm text-[10px] font-mono tracking-wider border border-white/10 hover:bg-white/5 transition uppercase">
-            Optimize Mesh
-          </MagneticButton>
+
           <PulseIndicator 
             status={status === 'running' ? 'active' : 'offline'} 
             size="xs" 

@@ -5,7 +5,7 @@ import { BrainCircuit, Cpu, ShieldCheck, Search, Eye, Radio, Zap } from "lucide-
 import { useOrchestrationRegistry } from "../../../stores/orchestrationRegistry";
 import { MetricCounter } from "../../motion/MetricCounter";
 
-const agentIcons: Record<string, any> = {
+const agentIcons: Record<string, typeof Eye> = {
   "Vision": Eye,
   "Research": Search,
   "Validation": ShieldCheck,
@@ -73,9 +73,9 @@ export function ReasoningEngine() {
                 </div>
               </motion.div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-gray-600 space-y-3">
-                <BrainCircuit className="w-8 h-8 opacity-20 animate-pulse" />
-                <div className="italic text-[10px] tracking-widest uppercase">Awaiting agent consciousness...</div>
+              <div className="flex flex-col items-center justify-center h-full text-gray-700 space-y-3">
+                <BrainCircuit className="w-8 h-8 opacity-20" />
+                <div className="text-[10px] tracking-widest uppercase font-mono italic">Idle — Awaiting Orchestration Event</div>
               </div>
             )}
           </AnimatePresence>
