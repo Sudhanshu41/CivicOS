@@ -19,12 +19,12 @@ export function DashboardHeader() {
   const health = useOrchestrationRegistry(state => state.health);
   const { openAiCopilot, openIncidentModal } = useUIStore();
 
-  const getStatusColor = (): "yellow" | "red" | "gray" => {
+  const getStatusColor = (): "yellow" | "rose" | "gray" => {
     switch (status) {
       case "CONNECTED": return "yellow";
       case "CONNECTING":
       case "RECONNECTING": return "yellow";
-      case "DEGRADED": return "red";
+      case "DEGRADED": return "rose";
       default: return "gray";
     }
   };

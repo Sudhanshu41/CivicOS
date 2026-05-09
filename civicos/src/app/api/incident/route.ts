@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     // Prepare content for Gemini
-    const contents: Record<string, unknown>[] = [
+    const contents: any[] = [
       `Analyze this city incident report and return ONLY a JSON object with these exact keys: "category", "severity", "department", "inferredTitle", "summary", "confidence".
       
       Categories: infrastructure, traffic, emergency, sanitation, environmental, utility_failure, public_safety.

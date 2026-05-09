@@ -27,20 +27,26 @@ log = get_logger(__name__)
 redis_client: Redis | None = None
 
 
-async def init_redis() -> Redis:
+async def init_redis() -> Redis | None:
     """
     Create and store the global Redis client.
-
-    Must be called once during application startup.
+    Does not raise exceptions on connection failure; instead logs a warning.
     """
     global redis_client
-    redis_client = await aioredis.from_url(
-        settings.REDIS_URL,
-        max_connections=settings.REDIS_MAX_CONNECTIONS,
-        decode_responses=True,
-        encoding="utf-8",
-    )
-    log.info("redis_connected", url=settings.REDIS_URL)
+    try:
+        redis_client = await aioredis.from_url(
+            settings.REDIS_URL,
+            max_connections=settings.REDIS_MAX_CONNECTIONS,
+            decode_responses=True,
+            encoding="utf-8",
+        )
+        # Test connection
+        await redis_client.ping()
+        log.info("redis_connected", url=settings.REDIS_URL)
+    except Exception as exc:
+        log.warning("redis_connection_failed", url=settings.REDIS_URL, error=str(exc))
+        redis_client = None
+        
     return redis_client
 
 

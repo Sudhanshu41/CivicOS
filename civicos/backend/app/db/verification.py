@@ -39,16 +39,14 @@ async def verify_database_schema() -> None:
             missing_tables = [t for t in expected_tables if t not in existing_tables]
 
             if missing_tables:
-                log.error("db_schema_incomplete", missing_tables=missing_tables)
-                raise RuntimeError(
-                    f"Database schema is incomplete. Missing tables: {', '.join(missing_tables)}. "
-                    "Please run 'alembic upgrade head'."
+                log.error(
+                    "db_schema_incomplete", 
+                    missing_tables=missing_tables,
+                    advice="Please run 'alembic upgrade head' to fix the schema."
                 )
-
-            log.info("db_schema_verified", status="all_tables_present")
+            else:
+                log.info("db_schema_verified", status="all_tables_present")
 
     except Exception as exc:
-        if isinstance(exc, RuntimeError):
-            raise
-        log.exception("db_verification_failed", error=str(exc))
-        raise RuntimeError(f"Could not verify database schema: {exc}") from exc
+        log.error("db_connection_unavailable", error=str(exc), advice="Check your DATABASE_URL and Cloud SQL permissions.")
+

@@ -76,7 +76,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     _log_runtime_info()
 
     log.info(EVENT_APP_STARTUP, app=settings.APP_NAME, version=settings.APP_VERSION)
-
+    
+    # Initialise Redis (degrades gracefully if unavailable)
     await init_redis()
 
     # Verify database schema before allowing traffic

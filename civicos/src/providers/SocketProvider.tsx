@@ -39,7 +39,14 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({
     setStatus("CONNECTING");
     
     try {
-      const ws = new WebSocket(url);
+      // Production hardening: ensure WSS is used if on HTTPS
+      let finalUrl = url;
+      if (typeof window !== "undefined" && window.location.protocol === "https:" && finalUrl.startsWith("ws://")) {
+        console.log("[SocketProvider] Upgrading WS to WSS for production security");
+        finalUrl = finalUrl.replace("ws://", "wss://");
+      }
+
+      const ws = new WebSocket(finalUrl);
       socketRef.current = ws;
 
       ws.onopen = () => {

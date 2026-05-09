@@ -16,7 +16,7 @@ ${JSON.stringify(context?.cityMetrics || {})}
 Current Departments:
 ${JSON.stringify(context?.departments || {})}
 Active Incidents Summary:
-${JSON.stringify(Object.values(context?.incidents || {}).map((i: Record<string, unknown>) => ({ id: i.id, title: i.title, severity: i.severity, status: i.status })))}
+${JSON.stringify((Object.values(context?.incidents || {}) as any[]).map((i: any) => ({ id: i.id, title: i.title, severity: i.severity, status: i.status })))}
 Active Orchestrations (Workflows):
 ${JSON.stringify(context?.workflows || [])}
 

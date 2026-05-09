@@ -224,11 +224,11 @@ export function AICopilotPanel() {
                       <div className="mt-4 p-3 bg-white/[0.02] border border-white/5 rounded-lg space-y-2">
                         <div className="flex items-center justify-between text-[10px] font-mono uppercase">
                           <span className="text-gray-500">Confidence</span>
-                          <span className="text-emerald-400">{msg.telemetry.confidence}%</span>
+                          <span className="text-emerald-400">{(msg.telemetry as any).confidence}%</span>
                         </div>
                         <div className="flex items-center justify-between text-[10px] font-mono uppercase">
                           <span className="text-gray-500">Execution Time</span>
-                          <span className="text-blue-400">{msg.telemetry.latency}ms</span>
+                          <span className="text-blue-400">{(msg.telemetry as any).latency}ms</span>
                         </div>
                       </div>
                     )}
