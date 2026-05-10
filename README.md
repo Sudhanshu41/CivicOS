@@ -1,435 +1,177 @@
-# CivicOS
+# CivicOS — Realtime AI Urban Intelligence Operating System
 
-> AI-Powered Operating System for Smart Communities & Urban Infrastructure
+[![Google Hackathon](https://img.shields.io/badge/Google-Hackathon-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://hackathons.withgoogle.com/)
+[![Gemini AI](https://img.shields.io/badge/Powered%20By-Gemini%20AI-blue?style=for-the-badge&logo=google-gemini&logoColor=white)](https://deepmind.google/technologies/gemini/)
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 
-CivicOS is a futuristic multi-agent AI platform designed to help cities, communities, and public infrastructure systems operate more intelligently through autonomous workflows, predictive analytics, real-time monitoring, and AI-powered civic coordination.
-
-The platform combines:
-
-* AI Agents
-* Smart City Intelligence
-* Predictive Infrastructure Analytics
-* Traffic Intelligence
-* Emergency Coordination
-* Civic Issue Resolution
-* Futuristic AI Operating System UI
-
-CivicOS is being developed as a hackathon project focused on building the future of autonomous civic intelligence systems.
+**CivicOS** is a production-grade, realtime AI-powered urban intelligence operating system designed to orchestrate smart city infrastructure, emergency coordination, civic incident response, and geospatial operational intelligence. Built for high-stakes urban command centers, CivicOS leverages the **Gemini AI** ecosystem and **LangGraph** orchestration to transform raw city data into actionable, autonomous civic responses.
 
 ---
 
-# Vision
-
-Modern cities generate massive amounts of information:
-
-* traffic congestion
-* infrastructure issues
-* emergency incidents
-* public complaints
-* utility failures
-* environmental risks
-
-Most of this data remains:
-
-* fragmented
-* reactive
-* difficult to coordinate
-
-CivicOS aims to solve this by creating:
-
-> A centralized AI operating system capable of autonomously monitoring, analyzing, predicting, and coordinating city-wide civic operations.
-
-The long-term vision is to evolve CivicOS into:
-
-* an AI-powered civic intelligence layer
-* a smart city orchestration platform
-* an autonomous urban coordination system
-
----
-
-# Core Features
-
-## AI Agent Orchestration
-
-Multiple AI agents collaborate in real time to:
-
-* analyze civic problems
-* validate infrastructure reports
-* optimize traffic systems
-* coordinate emergency response
-* generate predictive insights
-* autonomously route civic workflows
-
-### Planned AI Agents
-
-* Vision Agent
-* Validation Agent
-* Research Agent
-* Action Agent
-* Notification Agent
-* Traffic Intelligence Agent
-* Predictive Analytics Agent
-* Emergency Coordination Agent
-
----
-
-## Smart City Digital Twin
-
-Interactive futuristic city visualization featuring:
-
-* real-time infrastructure monitoring
-* civic issue heatmaps
-* transportation intelligence
-* emergency coordination zones
-* AI-powered analytics overlays
-* holographic city systems
-
----
-
-## Traffic Intelligence System
-
-AI-powered transportation management featuring:
-
-* congestion prediction
-* smart route optimization
-* emergency corridor generation
-* public transport balancing
-* autonomous signal optimization
-* predictive traffic forecasting
-
----
-
-## Civic Issues Monitoring
-
-Autonomous civic issue resolution workflows for:
-
-* potholes
-* garbage overflow
-* water leakage
-* damaged infrastructure
-* streetlight failures
-* emergency civic incidents
-
-Includes:
-
-* issue prioritization
-* AI validation
-* workflow orchestration
-* autonomous routing
-* predictive maintenance
-
----
-
-## Infrastructure Intelligence
-
-Advanced infrastructure monitoring system for:
-
-* energy grids
-* water systems
-* transportation infrastructure
-* public utilities
-* structural integrity
-* predictive maintenance
-
----
-
-## Emergency Response Coordination
-
-AI-powered emergency management system featuring:
-
-* disaster prediction
-* emergency routing
-* infrastructure risk analysis
-* autonomous response coordination
-* tactical city monitoring
-* emergency analytics
-
----
-
-## Predictive Analytics Engine
-
-Future forecasting systems for:
-
-* traffic congestion
-* infrastructure degradation
-* emergency risks
-* maintenance demand
-* transportation load
-* civic issue hotspots
-
----
-
-## Cinematic AI Operating System UI
-
-The frontend is designed as a futuristic cinematic AI operating system featuring:
-
-* cyberpunk-inspired aesthetics
-* holographic interfaces
-* neural intelligence effects
-* cinematic animations
-* glassmorphism design system
-* smart city visualization
-* immersive motion systems
-
----
-
-# Tech Stack
-
-## Frontend
-
-* Next.js
-* TypeScript
-* Tailwind CSS
-* Framer Motion
-* React
-
-## Planned Backend
-
-* FastAPI
-* LangGraph
-* Gemini API
-* Firebase
-* WebSockets
-* Google Maps APIs
-
-## AI & Agent Systems
-
-* Gemini AI
-* Multi-Agent Workflows
-* AI Orchestration Engine
-* Predictive Intelligence Systems
-
----
-
-# Frontend Architecture
-
-## Major Screens
-
-* Landing Page
-* AI Dashboard
-* Agent Orchestration Center
-* Smart City Digital Twin
-* Traffic Intelligence
-* Civic Issues Center
-* Infrastructure Intelligence
-* Emergency Response Center
-* Predictive Analytics
-* AI Core Command Center
-* System Settings
-
----
-
-# UI/UX Philosophy
-
-CivicOS is designed to feel like:
-
-> “An autonomous AI civilization operating system from the future.”
-
-Design principles:
-
-* cinematic motion
-* futuristic intelligence
-* holographic depth
-* immersive atmosphere
-* premium interactions
-* responsive AI systems
-* living dashboard environment
-
----
-
-# Project Structure
-
-```txt
-src/
-├── app/
-│   ├── dashboard/
-│   └── pages/
-│
-├── components/
-│   ├── agents/
-│   ├── analytics/
-│   ├── dashboard/
-│   ├── maps/
-│   ├── motion/
-│   ├── ui/
-│   └── overlays/
-│
-├── hooks/
-├── lib/
-├── styles/
-└── public/
+## 🏗️ System Architecture
+
+CivicOS is architected as a distributed intelligence platform, separating concerns between high-frequency telemetry, long-running AI orchestrations, and a cinematic geospatial frontend.
+
+```mermaid
+graph TD
+    A[Citizen Report / Sensor Input] --> B[AI VISION & NLP Analysis]
+    B --> C{CIVIC CORE Orchestrator}
+    C --> D[LangGraph Workflow Execution]
+    D --> E[Department Routing Engine]
+    E --> F[Emergency / Infrastructure / Traffic]
+    F --> G[Realtime WebSocket Propagation]
+    G --> H[Tactical Map & HUD Updates]
+    H --> I[Workflow Replay & Persistence]
+    
+    subgraph "AI Intelligence Layer"
+    B
+    C
+    D
+    end
+    
+    subgraph "Realtime Synchronization"
+    G
+    H
+    end
 ```
 
+### **The Intelligence Pipeline**
+1. **Intake**: Multi-modal data (images, text, sensor telemetry) enters the system.
+2. **Analysis**: **Gemini 2.5 Flash** performs zero-shot classification and severity inference.
+3. **Orchestration**: A **LangGraph** state machine determines the escalation chain and agent delegation.
+4. **Propagation**: Results are streamed via **WebSockets** to all connected command consoles.
+5. **Visualization**: The **Google Maps Tactical Layer** renders the operational impact in real-time.
+
 ---
 
-# Setup Instructions
+## 🚀 Core Features
 
-## 1. Clone Repository
+### **1. Realtime AI Orchestration**
+Autonomous management of civic workflows using a multi-agent system. Each agent (Vision, Routing, Action) reasons about the incident and coordinates with city departments.
 
+### **2. Geospatial Intelligence**
+A premium integration of the **Google Maps JavaScript API** featuring:
+- **Tactical Overlays**: Real-time incident markers and emergency perimeters.
+- **Infrastructure Layers**: Live monitoring of city-wide assets (hospitals, fire stations, utility nodes).
+- **Traffic Intelligence**: Dynamic congestion heatmaps and AI-driven rerouting visualization.
+
+### **3. CIVIC CORE — AI Command Copilot**
+A streaming, conversational intelligence assistant powered by **Gemini**.
+- **Context-Aware**: Ingests live city telemetry, active workflows, and department loads.
+- **Operational Reasoning**: Answers complex questions like *"Why is traffic overloaded in Sector 4?"* or *"Predict infrastructure risk based on current escalations."*
+
+### **4. Workflow Replay Engine**
+A cinematic "mission-style" replay system that allows commanders to review every step of an AI decision-making process, including agent logs, telemetry spikes, and execution traces.
+
+---
+
+## 🛠️ Tech Stack
+
+### **Frontend (Command Console)**
+- **Next.js 15 (App Router)**: For high-performance SSR and seamless routing.
+- **TypeScript**: Ensuring type-safe operational data structures.
+- **Tailwind CSS**: Custom cinematic HUD styling with glassmorphism.
+- **Framer Motion**: Powering fluid, high-end UI transitions and micro-interactions.
+- **React Flow**: Visualizing the complex AI orchestration graphs.
+- **Zustand**: Lightweight, high-speed global state management for telemetry.
+- **Google Maps JS API**: The primary geospatial visualization surface.
+
+### **Backend (Intelligence Core)**
+- **FastAPI (Python)**: High-performance asynchronous API framework.
+- **LangGraph / LangChain**: Managing complex, multi-step AI orchestration states.
+- **Gemini API**: The reasoning brain for incident analysis and conversational intelligence.
+- **PostgreSQL / SQLAlchemy**: Robust persistence for city incidents and workflow history.
+- **Redis**: High-speed caching and pub/sub for realtime events.
+- **WebSockets**: Bi-directional streaming of system telemetry and AI events.
+
+---
+
+## 📸 Screenshots
+
+| Dashboard Overview | Tactical Map |
+| :--- | :--- |
+| ![Dashboard Placeholder](https://via.placeholder.com/800x450/0a0a0f/ffffff?text=CivicOS+Dashboard+Overview) | ![Map Placeholder](https://via.placeholder.com/800x450/0a0a0f/ffffff?text=Tactical+Geospatial+Intelligence) |
+
+| AI Orchestration Graph | CIVIC CORE Copilot |
+| :--- | :--- |
+| ![Orchestration Placeholder](https://via.placeholder.com/800x450/0a0a0f/ffffff?text=AI+Orchestration+Flow) | ![Copilot Placeholder](https://via.placeholder.com/800x450/0a0a0f/ffffff?text=CIVIC+CORE+Intelligence) |
+
+---
+
+## ⚙️ Local Development Setup
+
+### **Prerequisites**
+- Node.js 18+
+- Python 3.10+
+- Docker & Docker Compose (for Postgres/Redis)
+
+### **1. Clone & Install**
 ```bash
-git clone https://github.com/YOUR_USERNAME/civicos.git
+git clone https://github.com/Sudhanshu41/CivicOS.git
+cd CivicOS
 ```
 
----
-
-## 2. Install Dependencies
-
+### **2. Frontend Setup**
 ```bash
+cd civicos
 npm install
-```
-
----
-
-## 3. Start Development Server
-
-```bash
+cp .env.example .env.local
+# Add your API keys to .env.local
 npm run dev
 ```
 
----
-
-## 4. Open in Browser
-
-```txt
-http://localhost:3000
+### **3. Backend Setup**
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+# Configure backend/.env
+python main.py
 ```
 
----
-
-# Current Status
-
-## ✅ Completed
-
-* Futuristic frontend architecture
-* Cinematic dashboard system
-* AI operating system UI
-* Framer Motion animation system
-* Neural intelligence visual effects
-* Smart city visualizations
-* Reusable motion components
-* Advanced glassmorphism design system
-* Full navigation structure
-
-## 🔄 In Progress
-
-* Backend architecture
-* Gemini AI integration
-* Multi-agent orchestration
-* LangGraph workflows
-* Realtime APIs
-* Smart city data pipelines
+### **Environment Variables**
+| Variable | Description |
+| :--- | :--- |
+| `GEMINI_API_KEY` | Official Google Gemini API Key |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps Platform Key |
+| `DATABASE_URL` | PostgreSQL Connection String |
+| `REDIS_URL` | Redis Instance URL |
+| `NEXT_PUBLIC_WS_URL` | WebSocket Server Address |
 
 ---
 
-# Planned AI Workflow
+## 🌍 Deployment
 
-```txt
-User Input
-    ↓
-Orchestrator Agent
-    ↓
-Classification Agent
-    ↓
-Validation Agent
-    ↓
-Research Agent
-    ↓
-Action Agent
-    ↓
-Notification Agent
-    ↓
-Realtime Frontend Updates
-```
+CivicOS is designed for cloud-native deployment on **Google Cloud Platform**:
+- **Cloud Run**: Scalable containerized deployment for the FastAPI backend and Next.js frontend.
+- **Cloud SQL**: Managed PostgreSQL for persistent city records.
+- **Cloud Memorystore**: Managed Redis for high-frequency telemetry.
+- **Firebase Hosting**: Global CDN for optimized frontend delivery.
 
 ---
 
-# Future Scope
+## 💎 Engineering Highlights
 
-Potential future expansion:
-
-* real municipal integrations
-* IoT infrastructure monitoring
-* autonomous emergency systems
-* AI-powered governance analytics
-* citizen communication AI
-* infrastructure prediction systems
-* smart transportation optimization
-* autonomous maintenance coordination
+- **Modular Orchestration**: Workflows are decoupled from the execution engine, allowing for hot-swappable AI agents.
+- **Realtime Synchronization**: Uses a customized WebSocket protocol to ensure sub-100ms synchronization across all command consoles.
+- **Replay-Capable Systems**: Every AI decision is immutable and stored in a temporal trace for auditability.
+- **Cinematic UX**: A design language focused on "Information Density with Clarity," inspired by aerospace command interfaces.
 
 ---
 
-# Team Collaboration Guidelines
+## 🔮 Future Roadmap
 
-## Branch Naming
-
-```txt
-feature/feature-name
-fix/bug-name
-ui/component-name
-backend/service-name
-```
+- [ ] **Predictive AI Operations**: Moving from reactive response to proactive infrastructure prevention.
+- [ ] **IoT Edge Integration**: Direct ingestion from city-wide hardware sensors and camera meshes.
+- [ ] **Satellite Intelligence**: Ingesting high-resolution satellite imagery for disaster damage assessment.
+- [ ] **Autonomous Dispatch**: Seamless integration with autonomous emergency vehicle fleets.
 
 ---
 
-## Commit Style
+## 📜 License
 
-```txt
-feat: add traffic intelligence system
-fix: resolve animation lag issue
-ui: improve dashboard glassmorphism
-backend: add Gemini API integration
-```
+Distributed under the MIT License. See `LICENSE` for more information.
 
----
-
-## Coding Guidelines
-
-* Maintain modular architecture
-* Keep components reusable
-* Follow cinematic UI consistency
-* Avoid duplicated motion logic
-* Use reusable motion components
-* Keep AI workflows isolated and scalable
-
----
-
-# Screenshots
-
-> Add screenshots of major screens here.
-
-Recommended:
-
-* Landing Page
-* Dashboard
-* Smart City Map
-* Traffic Intelligence
-* Emergency Center
-* AI Core
-
----
-
-# Hackathon Focus
-
-CivicOS is designed to demonstrate:
-
-* Multi-Agent AI Systems
-* Autonomous Civic Intelligence
-* Smart City Infrastructure
-* Predictive Analytics
-* Futuristic AI Interfaces
-* Real-Time Monitoring Systems
-* AI Workflow Orchestration
-
----
-
-# License
-
-This project is currently developed for educational and hackathon purposes.
-
----
-
-# Final Thought
-
-> CivicOS is not just a dashboard.
->
-> It is an experiment in building the future operating layer for intelligent cities.
+**CivicOS** — *Orchestrating the Future of Autonomous Civic Intelligence.*
