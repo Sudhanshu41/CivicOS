@@ -1,7 +1,0 @@
-{
-  "framework": "nextjs",
-  "buildCommand": "cd civicos && npm install && npm run build",
-  "outputDirectory": "civicos/.next",
-  "installCommand": "cd civicos && npm install",
-  "devCommand": "cd civicos && npm run dev"
-}
